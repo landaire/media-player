@@ -3,7 +3,9 @@ package org.madhatters.mediaplayer.media;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 
 /**
@@ -14,9 +16,11 @@ import java.util.Iterator;
 public class FileFinder {
     private static String [] fileExtentions = {"mp3", "mp4"};
                                 //Parameters of file start location
-    public static Iterator<File> findIn(String directory) {
-        Iterator files = FileUtils.iterateFiles(new File(directory), fileExtentions, true);
-
-        return files;
+    public static Collection<MediaFile> findIn(String directory) {
+        return FileUtils.listFiles(new File(directory), fileExtentions, true)
+                .stream()
+                .filter(MediaFile::isValid)
+                .map(f -> new MediaFile(f))
+                .collect(Collectors.toList());
     }
 }

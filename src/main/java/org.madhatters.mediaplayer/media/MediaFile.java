@@ -1,7 +1,17 @@
 package org.madhatters.mediaplayer.media;
 
 import javafx.scene.media.Media;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.Parser;
+import org.apache.tika.parser.mp3.*;
+import org.apache.tika.parser.mp3.Mp3Parser;
+import org.xml.sax.helpers.DefaultHandler;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 
 /**
@@ -19,13 +29,18 @@ public class MediaFile {
     private String album;
     private Media media;
 
+    public MediaFile(File f)
+    {
+        Metadata metadata = parse(f);
 
-    public MediaFile(String fileLocation, String fileName, String artistName, String songTitle, String album) {
-        this.fileName = fileName;
-        this.artistName = artistName;
-        this.songTitle = songTitle;
-        this.album = album;
-        this.media = new Media(Paths.get(fileLocation).toUri().toString());
+        if (metadata == null) {
+            throw new IllegalArgumentException("f is not a valid MP3 file");
+        }
+
+        this.fileName = f.getName();
+        this.artistName = metadata.get("xmpDM:artist");
+        this.songTitle = metadata.get("title");
+        this.album = metadata.get("xmpDM:album");
     }
 
     public void printFileName() {
@@ -51,4 +66,33 @@ public class MediaFile {
         return this.album;
     }
 
+    public static boolean isValid(File file) {
+        return parse(file) != null;
+    }
+
+    protected static Metadata parse(File file) {
+        Parser parser = new Mp3Parser();
+        InputStream stream;
+        Metadata metadata = new Metadata();
+
+
+        try {
+            stream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+
+        try {
+            parser.parse(stream, new DefaultHandler(), metadata, new ParseContext());
+        } catch (Exception e) {
+            return null;
+        } finally {
+            // java is freaking stupid. why would this ever throw an exception?
+            try {
+                stream.close();
+            } catch (Exception e) {}
+        }
+
+        return metadata;
+    }
 }
