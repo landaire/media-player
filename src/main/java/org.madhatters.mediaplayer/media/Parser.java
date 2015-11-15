@@ -1,21 +1,21 @@
-package MediaParser;
+package org.madhatters.mediaplayer.media;
 
-import MediaFile.MediaFile;
+import javafx.embed.swing.JFXPanel;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.Parser;
 import org.apache.tika.parser.mp3.Mp3Parser;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import java.io.File;
 import java.io.*;
-import javafx.embed.swing.JFXPanel;
 
 /**
  * Created by RyanMalmoe on 11/6/15.
  */
-public class MediaParser {
+public class Parser {
 
 
     public MediaFile getMediaFileObjectWithFileLocation(String fileLocation, String fileName) {
@@ -23,7 +23,7 @@ public class MediaParser {
             InputStream input = new FileInputStream(new File(fileLocation));
             ContentHandler handler = new DefaultHandler();
             Metadata metadata = new Metadata();
-            Parser parser = new Mp3Parser();
+            org.apache.tika.parser.Parser parser = new Mp3Parser();
             ParseContext parseCtx = new ParseContext();
             parser.parse(input, handler, metadata, parseCtx);
             input.close();

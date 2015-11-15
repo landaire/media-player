@@ -1,7 +1,7 @@
-package MediaFile;
+package org.madhatters.mediaplayer.media;
 
-import javafx.application.Application;
 import javafx.scene.media.Media;
+
 import java.nio.file.Paths;
 
 /**
