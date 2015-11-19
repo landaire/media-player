@@ -4,7 +4,6 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.stream.Collectors;
 
 
@@ -16,11 +15,11 @@ import java.util.stream.Collectors;
 public class FileFinder {
     private static String [] fileExtentions = {"mp3", "mp4"};
                                 //Parameters of file start location
-    public static Collection<MediaFile> findIn(String directory) {
+    public static Collection<Mp3File> findIn(String directory) {
         return FileUtils.listFiles(new File(directory), fileExtentions, true)
                 .stream()
-                .filter(MediaFile::isValid)
-                .map(f -> new MediaFile(f))
+                .filter(Mp3File::isValid)
+                .map(f -> new Mp3File(f))
                 .collect(Collectors.toList());
     }
 }

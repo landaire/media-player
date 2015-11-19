@@ -22,14 +22,14 @@ import java.nio.file.Paths;
 
 //SONG NAME IS THE FILENAME MINUS THE EXTENSION.
 
-public class MediaFile {
+public class Mp3File {
     private String fileName;
     private String artistName;
     private String songTitle;
     private String album;
     private Media media;
 
-    public MediaFile(File f)
+    public Mp3File(File f)
     {
         Metadata metadata = parse(f);
 
