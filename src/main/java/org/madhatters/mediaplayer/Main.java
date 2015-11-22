@@ -10,9 +10,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/main_view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/indexing_screen.fxml"));
         primaryStage.setTitle("Mad Hatter Media Player");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 
