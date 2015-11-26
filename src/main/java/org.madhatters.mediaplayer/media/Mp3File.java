@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 //SONG NAME IS THE FILENAME MINUS THE EXTENSION.
 
 public class Mp3File {
-    private String fileName;
+    private String filePath;
     private String artistName;
     private String songTitle;
     private String album;
@@ -37,14 +37,14 @@ public class Mp3File {
             throw new IllegalArgumentException("f is not a valid MP3 file");
         }
 
-        this.fileName = f.getName();
+        this.filePath = f.getAbsolutePath();
         this.artistName = metadata.get("xmpDM:artist");
         this.songTitle = metadata.get("title");
         this.album = metadata.get("xmpDM:album");
     }
 
     public void printFileName() {
-        System.out.println(this.fileName);
+        System.out.println(this.filePath);
     }
     public void printSongTitle() {
         System.out.println(this.songTitle);
@@ -53,8 +53,8 @@ public class Mp3File {
     public Media getMedia() {
         return this.media;
     }
-    public String getFileName() {
-        return this.fileName;
+    public String getFilePath() {
+        return this.filePath;
     }
     public String getArtistName() {
         return this.artistName;
