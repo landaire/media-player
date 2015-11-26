@@ -7,6 +7,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.madhatters.mediaplayer.media.FileFinder;
+import org.madhatters.mediaplayer.media.Playlist;
 import org.madhatters.mediaplayer.models.Mp3;
 
 import java.util.stream.Collectors;
@@ -20,9 +21,9 @@ public class MainController {
     ObservableList<Mp3> files;
 
     public void initialize() {
-        files = FXCollections.observableArrayList(FileFinder.findIn("/Users/lander/Downloads/Black Hippy - T.D.E. (2014) [MP3 320]")
+        files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
                 .stream()
-                .map(f -> new Mp3(f.getFileName(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
                 .collect(Collectors.toList())
         );
 
@@ -31,5 +32,6 @@ public class MainController {
         filePathColumn.setCellValueFactory(new PropertyValueFactory<>("path"));
         artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+
     }
 }
