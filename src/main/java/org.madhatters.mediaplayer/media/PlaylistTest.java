@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * Created by RyanMalmoe on 11/26/15.
  *
- * 2 of 4 unit tests complete
+ * 4 of 4 unit tests complete
  *
  */
 public class PlaylistTest {
@@ -62,12 +62,36 @@ public class PlaylistTest {
 
     @org.junit.Test
     public void testPreviousTrack() throws Exception {
+        ObservableList<Mp3> files;
+        files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
+                .stream()
+                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                .collect(Collectors.toList())
+        );
+
+        Playlist playlist = new Playlist(files);
+        playlist.previousTrack();
+        assertEquals("/Users/RyanMalmoe/Documents/THEPRAYER.mp3", playlist.getCurrentSong().getPath());
+
+        //After skipping the track again it should loop back to the beginning track.
+        playlist.previousTrack();
+        assertEquals("/Users/RyanMalmoe/Documents/TestSong/TestSong.mp3", playlist.getCurrentSong().getPath());
 
     }
 
     @org.junit.Test
     public void testRemoveSong() throws Exception {
+        ObservableList<Mp3> files;
+        files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
+                .stream()
+                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                .collect(Collectors.toList())
+        );
+
+        Playlist playlist = new Playlist(files);
+        assertEquals("/Users/RyanMalmoe/Documents/TestSong/TestSong.mp3", playlist.getCurrentSong().getPath());
+        playlist.removeSong(playlist.getCurrentSong());
+        assertEquals("/Users/RyanMalmoe/Documents/THEPRAYER.mp3", playlist.getCurrentSong().getPath());
 
     }
-
 }
