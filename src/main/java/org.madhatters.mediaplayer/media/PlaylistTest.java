@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 /**
  * Created by RyanMalmoe on 11/26/15.
  *
- * 7 of 7 unit tests complete
+ * 7 of 8 unit tests complete
  *
  * Next job:
  *  -Test get current song (Done)
@@ -35,10 +35,27 @@ import java.util.stream.Collectors;
  *  -Test create playlist with 0 files or null observable list (Done)
  *  -Test skip track with 0 or 1 files in playlist (Done)
  *  -Test previous track with 0 or 1 files in playlist (Done)
+ *  -Test getSongAtIndex for all cases
  *
  */
 public class PlaylistTest {
 
+
+    @org.junit.Test
+            (expected=IndexOutOfBoundsException.class) public void testGetSongAtIndex() throws Exception {
+        ObservableList<Mp3> files;
+        files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
+                .stream()
+                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                .collect(Collectors.toList())
+        );
+
+        Playlist playlist = new Playlist(files);
+        playlist.getSongAtIndex(0);
+        playlist.getSongAtIndex(-1);
+        playlist.getSongAtIndex(3);
+
+    }
 
     @org.junit.Test
             (expected=IllegalArgumentException.class) public void testPlaylistInitialization() throws Exception {

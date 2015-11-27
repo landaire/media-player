@@ -38,6 +38,9 @@ public class Playlist {
 
 
     public Mp3 getSongAtIndex(int songIndex) {
+        if(songIndex < 0 || songIndex > files.size() - 1) {
+            throw new IndexOutOfBoundsException("Song index out of bounds");
+        }
         return files.get(songIndex);
     }
 
