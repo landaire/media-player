@@ -1,8 +1,11 @@
 package org.madhatters.mediaplayer.media;
 
+import junit.framework.Assert;
+import org.junit.Test;
 import org.madhatters.mediaplayer.models.Mp3;
 
 import static groovy.util.GroovyTestCase.assertEquals;
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;
 
 
@@ -22,11 +25,26 @@ import java.util.stream.Collectors;
 /**
  * Created by RyanMalmoe on 11/26/15.
  *
- * 4 of 4 unit tests complete
+ * 7 of 7 unit tests complete
+ *
+ * Next job:
+ *  -Test get current song (Done)
+ *  -Test skip track (Done)
+ *  -Test previous track (Done)
+ *  -Test remove song (Done)
+ *  -Test create playlist with 0 files or null observable list (Done)
+ *  -Test skip track with 0 or 1 files in playlist (Done)
+ *  -Test previous track with 0 or 1 files in playlist (Done)
  *
  */
 public class PlaylistTest {
 
+
+    @org.junit.Test
+            (expected=IllegalArgumentException.class) public void testPlaylistInitialization() throws Exception {
+        ObservableList<Mp3> files = null;
+        Playlist playlist = new Playlist(files);
+    }
 
     @org.junit.Test
     public void testGetCurrentSong() throws Exception {
@@ -42,7 +60,7 @@ public class PlaylistTest {
     }
 
     @org.junit.Test
-    public void testSkipTrack() throws Exception {
+            (expected=IllegalArgumentException.class) public void testSkipTrack() throws Exception {
         ObservableList<Mp3> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
                 .stream()
@@ -54,14 +72,19 @@ public class PlaylistTest {
         playlist.skipTrack();
         assertEquals("/Users/RyanMalmoe/Documents/THEPRAYER.mp3", playlist.getCurrentSong().getPath());
 
-        //After skipping the track again it should loop back to the beginning track.
         playlist.skipTrack();
         assertEquals("/Users/RyanMalmoe/Documents/TestSong/TestSong.mp3", playlist.getCurrentSong().getPath());
+
+        //EDGE CASE FOR SKIPPING TRACK
+        playlist.removeSongByIndex(0);
+        playlist.removeSongByIndex(0);
+        playlist.skipTrack();
+
 
     }
 
     @org.junit.Test
-    public void testPreviousTrack() throws Exception {
+            (expected=IllegalArgumentException.class) public void testPreviousTrack() throws Exception {
         ObservableList<Mp3> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
                 .stream()
@@ -73,9 +96,14 @@ public class PlaylistTest {
         playlist.previousTrack();
         assertEquals("/Users/RyanMalmoe/Documents/THEPRAYER.mp3", playlist.getCurrentSong().getPath());
 
-        //After skipping the track again it should loop back to the beginning track.
         playlist.previousTrack();
         assertEquals("/Users/RyanMalmoe/Documents/TestSong/TestSong.mp3", playlist.getCurrentSong().getPath());
+
+        //EDGE CASE FOR PREVIOUS TRACK
+        playlist.removeSongByIndex(0);
+        playlist.removeSongByIndex(0);
+        playlist.previousTrack();
+
 
     }
 
@@ -92,6 +120,26 @@ public class PlaylistTest {
         assertEquals("/Users/RyanMalmoe/Documents/TestSong/TestSong.mp3", playlist.getCurrentSong().getPath());
         playlist.removeSong(playlist.getCurrentSong());
         assertEquals("/Users/RyanMalmoe/Documents/THEPRAYER.mp3", playlist.getCurrentSong().getPath());
+    }
 
+    @org.junit.Test
+            (expected=IllegalArgumentException.class) public void testRemoveSongByIndex() throws Exception {
+        ObservableList<Mp3> files;
+        files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
+                .stream()
+                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                .collect(Collectors.toList())
+        );
+
+        Playlist playlist = new Playlist(files);
+        assertEquals("/Users/RyanMalmoe/Documents/TestSong/TestSong.mp3", playlist.getCurrentSong().getPath());
+        playlist.removeSongByIndex(0);
+        assertEquals("/Users/RyanMalmoe/Documents/THEPRAYER.mp3", playlist.getCurrentSong().getPath());
+
+        //EDGE CASE FOR REMOVING INDEX OUT OF RANGE / ZERO
+        playlist.removeSongByIndex(10);
+
+        playlist.removeSongByIndex(0);
+        playlist.removeSongByIndex(0);
     }
 }

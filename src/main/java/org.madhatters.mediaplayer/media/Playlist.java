@@ -1,6 +1,7 @@
 package org.madhatters.mediaplayer.media;
 
 import javafx.collections.ObservableList;
+import org.apache.cxf.common.i18n.Exception;
 import org.madhatters.mediaplayer.models.Mp3;
 
 /**
@@ -36,11 +37,17 @@ public class Playlist {
         public Mp3 getCurrentSong() { return this.currentSong; }
 
 
+    public Mp3 getSongAtIndex(int songIndex) {
+        return files.get(songIndex);
+    }
+
     /**
      * Skips to the next track in the playlist
      */
     public void skipTrack() {
-            if(this.currentSongIndex == this.files.size() - 1) {
+            if(files.size() == 0) {
+                throw new IllegalArgumentException("Cannot skip an empty playlist");
+            } else if(this.currentSongIndex == this.files.size() - 1) {
                 this.currentSongIndex = 0;
                 this.currentSong = files.get(this.currentSongIndex);
             } else {
@@ -53,7 +60,9 @@ public class Playlist {
      * Skips to the previous track in the playlist
      */
     public void previousTrack() {
-            if(this.currentSongIndex == 0) {
+             if(files.size() == 0) {
+                throw new IllegalArgumentException("Cannot skip an empty playlist");
+             } else if(this.currentSongIndex == 0) {
                 this.currentSongIndex = files.size() - 1;
                 this.currentSong = files.get(this.currentSongIndex);
             } else {
@@ -76,8 +85,24 @@ public class Playlist {
                 return;
             }
             skipTrack();
-            files.remove(mp3);
+            this.files.remove(mp3);
+            this.currentSongIndex--;
         }
+
+    /**
+     * Removes song by given index from playlist
+     * @param songIndex
+     */
+
+    public void removeSongByIndex(int songIndex) {
+        if(this.files.size() == 0 || songIndex < 0 || songIndex > this.files.size() - 1) {
+            throw new IllegalArgumentException("No song at this index");
+        } else {
+            skipTrack();
+            files.remove(files.get(songIndex));
+            this.currentSongIndex--;
+        }
+    }
 
 
 }
