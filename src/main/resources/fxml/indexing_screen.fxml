@@ -9,7 +9,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane hgap="14.0" maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="502.0" vgap="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane hgap="14.0" maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="502.0" vgap="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.madhatters.mediaplayer.controllers.IndexingScreenController">
   <children>
     <VBox maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-Infinity" prefWidth="400.0" spacing="7.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <children>
@@ -20,15 +20,17 @@
         </Label>
             <HBox prefHeight="48.0" prefWidth="460.0">
                <children>
-                  <TextField prefHeight="27.0" prefWidth="378.0" />
+                  <TextField fx:id="scanDirTextField" prefHeight="27.0" prefWidth="378.0" />
                   <Button fx:id="chooseDirectoryButton" mnemonicParsing="false" text="..." />
                </children>
             </HBox>
-            <Label text="blah blah blah blah" />
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <ProgressBar prefWidth="200.0" progress="0.0" HBox.hgrow="ALWAYS" />
-                  <ProgressIndicator progress="0.0" />
+                  <ProgressBar fx:id="fileStatusProgressBar" maxWidth="+Infinity" progress="0.0" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </ProgressBar>
                </children>
             </HBox>
       </children>
@@ -43,7 +45,7 @@
         <Pane maxWidth="+Infinity" HBox.hgrow="ALWAYS" />
         <HBox fx:id="okParent" alignment="CENTER">
           <children>
-            <Button fx:id="okButton" minWidth="80.0" mnemonicParsing="false" text="Ok" HBox.hgrow="NEVER">
+            <Button fx:id="scanButton" minWidth="80.0" mnemonicParsing="false" text="Begin Scanning" HBox.hgrow="NEVER">
               <HBox.margin>
                 <Insets left="14.0" />
               </HBox.margin>
