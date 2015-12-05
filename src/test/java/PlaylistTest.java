@@ -1,21 +1,8 @@
-package org.madhatters.mediaplayer.media;
-
-import junit.framework.Assert;
-import org.junit.Test;
 import org.madhatters.mediaplayer.models.Mp3;
 
-import static groovy.util.GroovyTestCase.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.*;
-
-
 // These imports are for creating ObservableList
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import org.madhatters.mediaplayer.media.FileFinder;
 import org.madhatters.mediaplayer.media.Playlist;
 import org.madhatters.mediaplayer.models.Mp3;
@@ -39,6 +26,7 @@ import java.util.stream.Collectors;
  *
  */
 public class PlaylistTest {
+
 
 
     @org.junit.Test
@@ -158,5 +146,9 @@ public class PlaylistTest {
 
         playlist.removeSongByIndex(0);
         playlist.removeSongByIndex(0);
+    }
+
+    private <T> void assertEquals(T a, T b) {
+        assert(a.equals(b));
     }
 }
