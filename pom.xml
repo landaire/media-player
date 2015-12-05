@@ -21,7 +21,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.madhatters.mediaplayer.Main</mainClass>
+                            <mainClass>org.madhatters.mediaplayer.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
