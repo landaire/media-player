@@ -1,6 +1,7 @@
 package org.madhatters.mediaplayer.media;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 
 
 public class FileFinder {
-    private static String [] fileExtensions = {"mp3", "mp4"};
+    private static String [] fileExtensions = {"mp3"};
 
     public static Collection<Mp3File> findIn(String directory) {
         // empty lambda so nothing is done on callback
@@ -47,20 +48,14 @@ public class FileFinder {
                  @Override
                  public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                      // Validate the file extension
-                     boolean validExtension = false;
-                     for (String extension : fileExtensions) {
-                         if (file.endsWith("." + extension)) {
-                             validExtension = true;
-                             break;
-                         }
-                     }
-                     if (!validExtension) {
+                     File pathAsFile = file.toFile();
+                     if (!FilenameUtils.isExtension(pathAsFile.getName(), fileExtensions)) {
                          return FileVisitResult.CONTINUE;
                      }
 
                      // File extension is valid, check if it's a valid MP3 file
-                     if (Mp3File.isValid(file.toFile())) {
-                         files.add(new Mp3File(file.toFile()));
+                     if (Mp3File.isValid(pathAsFile)) {
+                         files.add(new Mp3File(pathAsFile));
                      }
 
                      return FileVisitResult.CONTINUE;

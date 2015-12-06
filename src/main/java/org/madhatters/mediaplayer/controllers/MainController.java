@@ -12,7 +12,7 @@ import org.madhatters.mediaplayer.models.Mp3;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class MainController extends AbstractController {
+public class MainController {
     @FXML private TableView<Mp3> mediaTable;
     @FXML private TableColumn<Mp3, String> filePathColumn;
     @FXML private TableColumn<Mp3, String> artistColumn;
