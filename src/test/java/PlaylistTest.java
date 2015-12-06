@@ -1,3 +1,4 @@
+import org.junit.Test;
 import org.madhatters.mediaplayer.models.Mp3;
 
 // These imports are for creating ObservableList
@@ -29,7 +30,7 @@ public class PlaylistTest {
 
 
 
-    @org.junit.Test
+    @Test
             (expected=IndexOutOfBoundsException.class) public void testGetSongAtIndex() throws Exception {
         ObservableList<Mp3> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
@@ -45,13 +46,13 @@ public class PlaylistTest {
 
     }
 
-    @org.junit.Test
+    @Test
             (expected=IllegalArgumentException.class) public void testPlaylistInitialization() throws Exception {
         ObservableList<Mp3> files = null;
         Playlist playlist = new Playlist(files);
     }
 
-    @org.junit.Test
+    @Test
     public void testGetCurrentSong() throws Exception {
         ObservableList<Mp3> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
@@ -64,7 +65,7 @@ public class PlaylistTest {
         assertEquals("/Users/RyanMalmoe/Documents/TestSong/TestSong.mp3", playlist.getCurrentSong().getPath());
     }
 
-    @org.junit.Test
+    @Test
             (expected=IllegalArgumentException.class) public void testSkipTrack() throws Exception {
         ObservableList<Mp3> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
@@ -88,7 +89,7 @@ public class PlaylistTest {
 
     }
 
-    @org.junit.Test
+    @Test
             (expected=IllegalArgumentException.class) public void testPreviousTrack() throws Exception {
         ObservableList<Mp3> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
@@ -112,7 +113,7 @@ public class PlaylistTest {
 
     }
 
-    @org.junit.Test
+    @Test
     public void testRemoveSong() throws Exception {
         ObservableList<Mp3> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
@@ -127,7 +128,7 @@ public class PlaylistTest {
         assertEquals("/Users/RyanMalmoe/Documents/THEPRAYER.mp3", playlist.getCurrentSong().getPath());
     }
 
-    @org.junit.Test
+    @Test
             (expected=IllegalArgumentException.class) public void testRemoveSongByIndex() throws Exception {
         ObservableList<Mp3> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
