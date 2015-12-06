@@ -20,13 +20,13 @@ public class MainController {
     ObservableList<Mp3> files;
 
     public void initialize() {
-        files = FXCollections.observableArrayList(FileFinder.findIn("/Users/lander/Downloads/Black Hippy - T.D.E. (2014) [MP3 320]")
-                .stream()
-                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
-                .collect(Collectors.toList())
-        );
-
-        mediaTable.setItems(files);
+//        files = FXCollections.observableArrayList(FileFinder.findIn("/Users/lander/Downloads/Black Hippy - T.D.E. (2014) [MP3 320]")
+//                .stream()
+//                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+//                .collect(Collectors.toList())
+//        );
+//
+//        mediaTable.setItems(files);
 
         filePathColumn.setCellValueFactory(new PropertyValueFactory<>("path"));
         artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));

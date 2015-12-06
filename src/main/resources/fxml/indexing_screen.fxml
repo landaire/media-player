@@ -29,6 +29,11 @@
                   </Button>
                </children>
             </HBox>
+          <Label fx:id="currentDirectoryLabel" text="" textAlignment="LEFT" wrapText="true">
+              <font>
+                  <Font name="System Bold" size="13.0" />
+              </font>
+          </Label>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <ProgressBar fx:id="fileStatusProgressBar" maxWidth="+Infinity" progress="0.0" HBox.hgrow="ALWAYS">

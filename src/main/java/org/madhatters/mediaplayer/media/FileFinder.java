@@ -3,7 +3,16 @@ package org.madhatters.mediaplayer.media;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.Callable;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -14,12 +23,63 @@ import java.util.stream.Collectors;
 
 public class FileFinder {
     private static String [] fileExtensions = {"mp3", "mp4"};
-                                //Parameters of file start location
+
     public static Collection<Mp3File> findIn(String directory) {
-        return FileUtils.listFiles(new File(directory), fileExtensions, true)
-                .stream()
-                .filter(Mp3File::isValid)
-                .map(f -> new Mp3File(f))
-                .collect(Collectors.toList());
+        // empty lambda so nothing is done on callback
+        return findIn(directory, f -> null);
+    }
+
+    public static Collection<Mp3File> findIn(String directory, Function<File, Void> onVisit) {
+        ArrayList<Mp3File> files = new ArrayList<>();
+         try {
+             Files.walkFileTree(new File(directory).toPath(), new FileVisitor<Path>() {
+                 @Override
+                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                     if (Thread.currentThread().isInterrupted()) {
+                         return FileVisitResult.SKIP_SUBTREE;
+                     }
+
+                     onVisit.apply(dir.toFile());
+
+                     return FileVisitResult.CONTINUE;
+                 }
+
+                 @Override
+                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                     // Validate the file extension
+                     boolean validExtension = false;
+                     for (String extension : fileExtensions) {
+                         if (file.endsWith("." + extension)) {
+                             validExtension = true;
+                             break;
+                         }
+                     }
+                     if (!validExtension) {
+                         return FileVisitResult.CONTINUE;
+                     }
+
+                     // File extension is valid, check if it's a valid MP3 file
+                     if (Mp3File.isValid(file.toFile())) {
+                         files.add(new Mp3File(file.toFile()));
+                     }
+
+                     return FileVisitResult.CONTINUE;
+                 }
+
+                 @Override
+                 public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                     return FileVisitResult.CONTINUE;
+                 }
+
+                 @Override
+                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                     return FileVisitResult.CONTINUE;
+                 }
+             });
+         } catch (IOException e) {
+             return null;
+         }
+
+        return files;
     }
 }
