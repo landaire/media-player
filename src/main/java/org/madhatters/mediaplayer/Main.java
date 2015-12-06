@@ -11,6 +11,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/indexing_screen.fxml"));
+
+        primaryStage.setResizable(false);
         primaryStage.setTitle("Mad Hatter Media Player");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
