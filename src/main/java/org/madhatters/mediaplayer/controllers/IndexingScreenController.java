@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Lander Brandt on 11/21/15.
  */
-public class IndexingScreenController {
+public class IndexingScreenController extends AbstractController {
     @FXML
     public Button chooseDirectoryButton;
     @FXML
@@ -33,7 +33,6 @@ public class IndexingScreenController {
     public Label currentDirectoryLabel;
     @FXML
     private ProgressBar fileStatusProgressBar;
-    private ExecutorService executorService;
 
     public void initialize() {
         scanDirTextField.setText(System.getProperty("user.home"));
@@ -42,6 +41,10 @@ public class IndexingScreenController {
         chooseDirectoryButton.setOnAction(chooseDirectoryButtonHandler());
     }
 
+    /**
+     * Event handler for the choose directory button
+     * @return
+     */
     private EventHandler<ActionEvent> chooseDirectoryButtonHandler() {
         return new EventHandler<ActionEvent>() {
             @Override
@@ -65,6 +68,10 @@ public class IndexingScreenController {
         };
     }
 
+    /**
+     * Event handler for the scan button
+     * @return
+     */
     private EventHandler<ActionEvent> scanButtonHandler() {
         return new EventHandler<ActionEvent>() {
             @Override
@@ -73,10 +80,12 @@ public class IndexingScreenController {
                         scanButton, scanDirTextField, chooseDirectoryButton,
                 };
 
+                // disable any controls which the user should not be able to interact with when indexing is occurring
                 for (Control c : disableControls) {
                     c.setDisable(true);
                 }
 
+                // -1.0f signals that this is indeterminite
                 fileStatusProgressBar.setProgress(-1.0f);
 
                 executorService.execute(() -> {
@@ -99,15 +108,19 @@ public class IndexingScreenController {
         };
     }
 
+    /**
+     * Current root scan directory
+     * @return scan directory
+     */
     private String scanDir() {
         return scanDirTextField.getText();
     }
 
+    /**
+     * Called when scanning files finishes
+     * @param files
+     */
     private void scanFinished(Collection<Mp3> files) {
         System.out.println("Finished scanning");
-    }
-
-    public void setExecutorService(ExecutorService service) {
-        this.executorService = service;
     }
 }
