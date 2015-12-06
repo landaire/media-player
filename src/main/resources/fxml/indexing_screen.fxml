@@ -20,7 +20,7 @@
         </Label>
             <HBox prefHeight="48.0" prefWidth="460.0">
                <children>
-                  <TextField fx:id="scanDirTextField" prefHeight="27.0" maxWidth="+Infinity" HBox.hgrow="ALWAYS">
+                  <TextField fx:id="scanDirTextField" maxWidth="+Infinity" prefHeight="27.0" HBox.hgrow="ALWAYS">
                   </TextField>
                   <Button fx:id="chooseDirectoryButton" mnemonicParsing="false" text="...">
                       <HBox.margin>
@@ -34,23 +34,19 @@
                   <Font name="System Bold" size="13.0" />
               </font>
           </Label>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <ProgressBar fx:id="fileStatusProgressBar" maxWidth="+Infinity" progress="0.0" HBox.hgrow="ALWAYS">
-                     <HBox.margin>
-                        <Insets right="10.0" top="10.0" />
-                     </HBox.margin>
-                  </ProgressBar>
-               </children>
-            </HBox>
+          <ProgressBar fx:id="fileStatusProgressBar" maxWidth="+Infinity" progress="0.0" HBox.hgrow="ALWAYS">
+              <HBox.margin>
+                  <Insets right="10.0" top="10.0" />
+              </HBox.margin>
+          </ProgressBar>
       </children>
     </VBox>
     <HBox maxHeight="-Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1">
       <children>
-        <HBox fx:id="actionParent" alignment="CENTER">
+        <HBox alignment="CENTER">
         </HBox>
         <Pane maxWidth="+Infinity" HBox.hgrow="ALWAYS" />
-        <HBox fx:id="okParent" alignment="CENTER">
+        <HBox alignment="CENTER">
           <children>
             <Button fx:id="scanButton" minWidth="80.0" mnemonicParsing="false" text="Begin Scanning" HBox.hgrow="NEVER">
               <HBox.margin>
