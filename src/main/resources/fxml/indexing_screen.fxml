@@ -9,7 +9,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane hgap="14.0" maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="502.0" vgap="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.madhatters.mediaplayer.controllers.IndexingScreenController">
+<GridPane hgap="14.0" prefHeight="300.0" prefWidth="500.0" vgap="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.madhatters.mediaplayer.controllers.IndexingScreenController">
   <children>
     <VBox maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-Infinity" prefWidth="400.0" spacing="7.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <children>
@@ -20,8 +20,13 @@
         </Label>
             <HBox prefHeight="48.0" prefWidth="460.0">
                <children>
-                  <TextField fx:id="scanDirTextField" prefHeight="27.0" prefWidth="378.0" />
-                  <Button fx:id="chooseDirectoryButton" mnemonicParsing="false" text="..." />
+                  <TextField fx:id="scanDirTextField" prefHeight="27.0" maxWidth="+Infinity" HBox.hgrow="ALWAYS">
+                  </TextField>
+                  <Button fx:id="chooseDirectoryButton" mnemonicParsing="false" text="...">
+                      <HBox.margin>
+                          <Insets left="10.0" />
+                      </HBox.margin>
+                  </Button>
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
@@ -38,9 +43,6 @@
     <HBox maxHeight="-Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1">
       <children>
         <HBox fx:id="actionParent" alignment="CENTER">
-          <HBox.margin>
-            <Insets />
-          </HBox.margin>
         </HBox>
         <Pane maxWidth="+Infinity" HBox.hgrow="ALWAYS" />
         <HBox fx:id="okParent" alignment="CENTER">
