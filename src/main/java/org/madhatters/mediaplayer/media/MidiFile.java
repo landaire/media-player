@@ -1,5 +1,22 @@
 package org.madhatters.mediaplayer.media;
 
+/**
+ * Created by RyanMalmoe on 12/6/15.
+ */
+
+import javafx.scene.media.Media;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.Parser;
+import org.apache.tika.parser.audio.MidiParser;
+import org.apache.tika.parser.mp3.Mp3Parser;
+import org.xml.sax.helpers.DefaultHandler;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 import javafx.scene.media.Media;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
@@ -22,19 +39,19 @@ import java.nio.file.Paths;
 
 //SONG NAME IS THE FILENAME MINUS THE EXTENSION.
 
-public class Mp3File extends AudioFile {
+public class MidiFile extends AudioFile {
     private String filePath;
     private String artistName;
     private String songTitle;
     private String album;
     private Media media;
 
-    public Mp3File(File f)
+    public MidiFile(File f)
     {
         Metadata metadata = parse(f);
 
         if (metadata == null) {
-            throw new IllegalArgumentException("f is not a valid MP3 file");
+            throw new IllegalArgumentException("f is not a valid Midi file");
         }
 
         this.filePath = f.getAbsolutePath();
@@ -69,7 +86,7 @@ public class Mp3File extends AudioFile {
     public boolean isValid(File file) { return parse(file) != null; }
 
     protected Metadata parse(File file) {
-        Parser parser = new Mp3Parser();
+        Parser parser = new MidiParser();
         InputStream stream;
         Metadata metadata = new Metadata();
 

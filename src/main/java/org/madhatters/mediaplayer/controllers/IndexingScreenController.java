@@ -7,14 +7,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Window;
-import org.madhatters.mediaplayer.Main;
 import org.madhatters.mediaplayer.media.FileFinder;
-import org.madhatters.mediaplayer.models.Mp3;
+import org.madhatters.mediaplayer.models.AudioFile;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -89,7 +86,7 @@ public class IndexingScreenController extends AbstractController {
                 fileStatusProgressBar.setProgress(-1.0f);
 
                 executorService.execute(() -> {
-                    Collection<Mp3> files =  FileFinder.findIn(scanDir(), f -> {
+                    Collection<AudioFile> files =  FileFinder.findIn(scanDir(), f -> {
                         Platform.runLater( new Runnable() {
                             @Override public void run() {
                                 currentDirectoryLabel.setText(f.getName());
@@ -99,7 +96,7 @@ public class IndexingScreenController extends AbstractController {
                         return null;
                     })
                             .stream()
-                            .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                            .map(f -> new AudioFile(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
                             .collect(Collectors.toList());
 
                     scanFinished(files);
@@ -120,7 +117,7 @@ public class IndexingScreenController extends AbstractController {
      * Called when scanning files finishes
      * @param files
      */
-    private void scanFinished(Collection<Mp3> files) {
+    private void scanFinished(Collection<AudioFile> files) {
         System.out.println("Finished scanning");
     }
 }

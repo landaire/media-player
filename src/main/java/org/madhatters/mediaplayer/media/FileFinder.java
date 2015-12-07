@@ -1,6 +1,7 @@
 package org.madhatters.mediaplayer.media;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,15 +23,15 @@ import java.util.stream.Collectors;
 
 
 public class FileFinder {
-    private static String [] fileExtensions = {"mp3", "mp4"};
+    private static String [] fileExtensions = {"mp3", "mp4", "mid"};
 
-    public static Collection<Mp3File> findIn(String directory) {
+    public static Collection<AudioFile> findIn(String directory) {
         // empty lambda so nothing is done on callback
         return findIn(directory, f -> null);
     }
 
-    public static Collection<Mp3File> findIn(String directory, Function<File, Void> onVisit) {
-        ArrayList<Mp3File> files = new ArrayList<>();
+    public static Collection<AudioFile> findIn(String directory, Function<File, Void> onVisit) {
+        ArrayList<AudioFile> files = new ArrayList<>();
          try {
              Files.walkFileTree(new File(directory).toPath(), new FileVisitor<Path>() {
                  @Override
@@ -58,9 +59,13 @@ public class FileFinder {
                          return FileVisitResult.CONTINUE;
                      }
 
-                     // File extension is valid, check if it's a valid MP3 file
-                     if (Mp3File.isValid(file.toFile())) {
-                         files.add(new Mp3File(file.toFile()));
+                     //Create AudioFactory object
+                     //Produce an audio file from the factory based on file extension
+                     //If AudioFile is valid then add to array list.
+                     AudioFactory audioFactory = new AudioFactory();
+                     AudioFile af = audioFactory.produceAudioFile(file.toFile(), FilenameUtils.getExtension(file.toString()));
+                     if (af.isValid(file.toFile())) {
+                         files.add(af);
                      }
 
                      return FileVisitResult.CONTINUE;
