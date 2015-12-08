@@ -9,7 +9,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.madhatters.mediaplayer.media.AudioFile;
 import org.madhatters.mediaplayer.models.Audio;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
+import java.io.File;
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -26,9 +30,33 @@ public class MainController {
     @FXML private TableColumn<Audio, String> artistColumn;
     @FXML private TableColumn<Audio, String> titleColumn;
 
+    MediaPlayer currentMediaPlayer;
+
     ObservableList<Audio> masterFiles = FXCollections.observableArrayList();
 
     public void initialize() {
+        mediaTable.setOnMousePressed(e -> {
+            if (e.isPrimaryButtonDown() && e.getClickCount() == 2) {
+                Audio selectedAudioFile = mediaTable.getSelectionModel().getSelectedItem();
+
+                if (currentMediaPlayer != null) {
+                    currentMediaPlayer.stop();
+                }
+
+                try {
+                    Media newMedia = new Media(new File(selectedAudioFile.getPath()).toURI().toString());
+                    currentMediaPlayer = new MediaPlayer(newMedia);
+                    currentMediaPlayer.play();
+                } catch (Exception ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
+        });
+
+        initializeTableView();
+    }
+
+    private void initializeTableView() {
         filePathColumn.setCellValueFactory(new PropertyValueFactory<>("path"));
         artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -51,7 +79,7 @@ public class MainController {
                     if (field == null) {
                         continue;
                     }
-                    
+
                     if (field.toLowerCase().contains(lowercaseFilter)) {
                         return true;
                     }
