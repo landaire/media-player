@@ -19,6 +19,7 @@ import org.madhatters.mediaplayer.media.Playlist;
 import org.madhatters.mediaplayer.models.Audio;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import org.madhatters.mediaplayer.util.TimeUtilities;
 
 import java.io.File;
 import java.util.Collection;
@@ -32,7 +33,10 @@ public class MainController {
     public Slider seekSlider;
     public Label songDurationLabel;
     public TextField searchField;
-    @FXML private TableView<Audio> mediaTable;
+    @FXML
+    public TableColumn<Audio, String> lengthColumn;
+    @FXML
+    private TableView<Audio> mediaTable;
     @FXML private TableColumn<Audio, String> filePathColumn;
     @FXML private TableColumn<Audio, String> artistColumn;
     @FXML private TableColumn<Audio, String> titleColumn;
@@ -121,7 +125,12 @@ public class MainController {
         seekSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                songDurationLabel.setText(String.format("%s - %s", formatMilliseconds(newValue.doubleValue()), formatMilliseconds(playlist.getCurrentSong().getDuration())));
+                if (currentMediaPlayer == null) {
+                    return;
+                }
+
+                songDurationLabel.setText(String.format("%s - %s", TimeUtilities.formatMilliseconds(newValue.doubleValue()),
+                        TimeUtilities.formatMilliseconds(playlist.getCurrentSong().getDuration())));
             }
         });
 
@@ -138,6 +147,7 @@ public class MainController {
         filePathColumn.setCellValueFactory(new PropertyValueFactory<>("path"));
         artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
 
         /**
          * Double-click handler for the table view
@@ -274,15 +284,6 @@ public class MainController {
         );
     }
 
-    /**
-     * Formats milliseconds in m:ss format
-     * @param milliseconds
-     * @return
-     */
-    private String formatMilliseconds(Double milliseconds) {
-        milliseconds /= 1000;
-        return String.format("%01.0f:%02.0f", milliseconds / 60, milliseconds % 60);
-    }
 
     private void seekCurrentSongFromSlider() {
         if (currentMediaPlayer != null) {

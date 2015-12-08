@@ -2,6 +2,7 @@ package org.madhatters.mediaplayer.models;
 
 import javafx.beans.property.SimpleStringProperty;
 import org.madhatters.mediaplayer.media.AudioFile;
+import org.madhatters.mediaplayer.util.TimeUtilities;
 
 /**
  * Created by Lander Brandt on 11/15/15.
@@ -11,6 +12,7 @@ public class Audio {
     private final SimpleStringProperty artist;
     private final SimpleStringProperty title;
     private final SimpleStringProperty album;
+    private SimpleStringProperty length;
 
     private Double duration;
 
@@ -28,6 +30,7 @@ public class Audio {
     public static Audio fromAudioFile(AudioFile file) {
         Audio that = new Audio(file.getFilePath(), file.getArtistName(), file.getSongTitle(), file.getAlbum());
         that.duration = file.getDuration();
+        that.length = new SimpleStringProperty(TimeUtilities.formatMilliseconds(file.getDuration()));
 
         return that;
     }
@@ -74,5 +77,9 @@ public class Audio {
         }
 
         return value;
+    }
+
+    public String getLength() {
+        return length.get();
     }
 }
