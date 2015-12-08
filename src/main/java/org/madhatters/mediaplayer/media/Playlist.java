@@ -3,6 +3,8 @@ package org.madhatters.mediaplayer.media;
 import javafx.collections.ObservableList;
 import org.madhatters.mediaplayer.models.Audio;
 
+import java.util.List;
+
 /**
  * Created by RyanMalmoe on 11/24/15.
  */
@@ -10,10 +12,9 @@ public class Playlist {
 
     private static final int FIRST_SONG = 0;
 
-    private ObservableList<Audio> files;
+    private List<Audio> files;
     private Audio currentSong;
     private int currentSongIndex;
-    private boolean shuffle = false;
 
 
     /**
@@ -22,8 +23,7 @@ public class Playlist {
      *
      * @param foundFiles
      */
-    public Playlist(ObservableList<Audio> foundFiles) {
-
+    public Playlist(List<Audio> foundFiles) {
         //  Check with lander on this base case.
         //  Do we want to create a playlist that is empty if no files are found?
         if (foundFiles == null || foundFiles.size() == 0) {
@@ -67,7 +67,9 @@ public class Playlist {
     public void previousTrack() {
         if (files.size() == 0) {
             throw new IllegalArgumentException("Cannot skip an empty playlist");
-        } else if (this.currentSongIndex == 0) {
+        }
+
+        if (this.currentSongIndex == 0) {
             this.currentSongIndex = files.size() - 1;
             this.currentSong = files.get(this.currentSongIndex);
         } else {
@@ -115,13 +117,5 @@ public class Playlist {
     public void setCurrentSong(Audio Audio) {
         this.currentSong = Audio;
         this.currentSongIndex = files.indexOf(Audio);
-    }
-
-    public void shuffle() {
-        shuffle = true;
-    }
-
-    public void unshuffle() {
-        shuffle = false;
     }
 }
