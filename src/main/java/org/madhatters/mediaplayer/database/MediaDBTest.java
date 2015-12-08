@@ -1,27 +1,24 @@
-package org.madhatters.mediaplayer.media;
+package org.madhatters.mediaplayer.database;
+
+import org.madhatters.mediaplayer.media.AudioFile;
+import org.madhatters.mediaplayer.media.FileFinder;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 public class MediaDBTest {
     public static void main(String[] args) {
-        MediaDB mediaPlayer = new MediaDB();
+        MediaDB mediaPlayer;
+        mediaPlayer = new MediaDB();
 
-        FileFinder allFiles = new FileFinder();
+        FileFinder allFiles;
+        allFiles = new FileFinder();
+
         System.out.println("START");
-        Collection<Mp3File> songs = allFiles.findIn("C:/Users/Joey/Music");
+        Collection<AudioFile> songs;
+        songs = allFiles.findIn("C:/Users/Joey/Music/AllMusic/Linkin Park");
         System.out.println("DONE");
 
-        Iterator<Mp3File> itr = songs.iterator();
-        while (itr.hasNext()) {
-            Mp3File song = itr.next();
-            System.out.println("Filepath: " + song.getFilePath());
-            System.out.println("Title: " + song.getSongTitle());
-            System.out.println("Artist: " + song.getArtistName());
-            System.out.println("Album: " + song.getAlbum());
-            System.out.println();
-            mediaPlayer.addMp3(song);
-        }
+        mediaPlayer.addAudioFiles(songs);
 
         mediaPlayer.closeDB();
     }

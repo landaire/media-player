@@ -1,9 +1,14 @@
-package org.madhatters.mediaplayer.media;
+package org.madhatters.mediaplayer.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.apache.commons.io.FilenameUtils;
+import org.madhatters.mediaplayer.media.AudioFile;
 
 public class MediaDB {
     private Connection con;
@@ -57,22 +62,41 @@ public class MediaDB {
         createDBTable(name, sql);
     }
 
-    public void addMp3(Mp3File mediaFile) {
-        String insert = "INSERT INTO audio VALUES (" +
-                            "\"" + mediaFile.getFilePath() + "\", " +
-                            "\"" + mediaFile.getArtistName() + "\", " +
-                            "\"" + mediaFile.getSongTitle() + "\", " +
-                            "\"" + mediaFile.getAlbum() + "\", " +
-                            "\"mp3\"" +
-                        ")";
+    public void addAudioFiles(Collection<AudioFile> files) {
+        if (files.isEmpty()) {
+            throw new IllegalArgumentException("Cannot add zero files");
+        } else {
+            Iterator<AudioFile> itr = files.iterator();
 
-        try {
-            PreparedStatement stmt = con.prepareStatement(insert);
-            stmt.setQueryTimeout(20);
-            stmt.executeUpdate();
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println(e);
+            while (itr.hasNext()) {
+                AudioFile curFile = itr.next();
+
+                String insert = "INSERT INTO audio VALUES (?, ?, ?, ?, ?)";/* +
+                        "\"" + curFile.getFilePath() + "\", " +
+                        "\"" + curFile.getArtistName() + "\", " +
+                        "\"" + curFile.getSongTitle() + "\", " +
+                        "\"" + curFile.getAlbum() + "\", " +
+                        "\"" + fileType + "\"" +
+                        ")";*/
+
+                try {
+                    PreparedStatement stmt = con.prepareStatement(insert);
+                    stmt.setQueryTimeout(30);
+
+                    stmt.setString(1, curFile.getFilePath());
+                    stmt.setString(2, curFile.getArtistName());
+                    stmt.setString(3, curFile.getSongTitle());
+                    stmt.setString(4, curFile.getAlbum());
+                    stmt.setString(5, FilenameUtils.getExtension(curFile.getFilePath()));
+
+                    System.out.println(stmt);
+
+                    stmt.executeUpdate();
+                    stmt.close();
+                } catch (SQLException e) {
+                    System.err.println(e);
+                }
+            }
         }
     }
 
