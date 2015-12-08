@@ -21,15 +21,14 @@ import java.io.InputStream;
 public class AudioFactory {
 
     public AudioFile produceAudioFile(File f, String fileExtension) {
-
         return determineParser(f, fileExtension);
     }
 
     public static AudioFile determineParser(File file, String fileExtension) {
         if (fileExtension.equalsIgnoreCase("mp3")) {
-            return new Mp3File(file);
+            return new Mp3File(file.getPath());
         } else if (fileExtension.equalsIgnoreCase("mid")) {
-            return new MidiFile(file);
+            return new MidiFile(file.getPath());
         }
 
         return null;

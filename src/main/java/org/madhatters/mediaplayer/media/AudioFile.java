@@ -15,12 +15,20 @@ import java.io.InputStream;
  * Created by RyanMalmoe on 12/6/15.
  */
 public abstract class AudioFile {
-    private String filePath;
-    private String artistName;
-    private String songTitle;
-    private String album;
-    private Media media;
-    private Double duration;
+    protected String filePath;
+    protected String artistName;
+    protected String songTitle;
+    protected String album;
+    protected Media media;
+    protected Double duration;
+
+    private Metadata metaData;
+
+    public void populateFields() {
+        File file = new File(this.filePath);
+
+        populateFields(this.parse(file), file);
+    }
 
     protected void populateFields(Metadata metadata, File file) {
         this.filePath = file.getAbsolutePath();
@@ -30,13 +38,30 @@ public abstract class AudioFile {
         this.duration = Double.parseDouble(metadata.get("xmpDM:duration"));
     }
 
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public void setArtistName(String artistName) {
+        this.artistName = artistName;
+    }
+
+    public void setSongTitle(String songTitle) {
+        this.songTitle = songTitle;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
+    }
+
+    public void setDuration(Double duration) {
+        this.duration = duration;
+    }
+
     public Double getDuration() {
         return duration;
     }
 
-    public Media getMedia() {
-        return this.media;
-    }
     public String getFilePath() {
         return this.filePath;
     }
@@ -50,13 +75,24 @@ public abstract class AudioFile {
         return this.album;
     }
 
-    public boolean isValid(File file) { return parse(file) != null; }
+    public boolean isValid(File file) {
+        if (this.metaData != null) {
+            return true;
+        }
+
+        this.metaData = parse(file);
+
+        return this.metaData != null;
+    }
 
     protected Metadata parse(File file) {
+        if (this.metaData != null) {
+            return metaData;
+        }
+
         Parser parser = getParser();
         InputStream stream;
         Metadata metadata = new Metadata();
-
 
         try {
             stream = new FileInputStream(file);

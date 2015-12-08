@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import org.madhatters.mediaplayer.builder.StageBuilder;
 import org.madhatters.mediaplayer.concurrent.ExecutorServiceSingleton;
 import org.madhatters.mediaplayer.controllers.IndexingScreenController;
+import org.madhatters.mediaplayer.database.MediaDB;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,7 +19,15 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         StageBuilder.setStage(primaryStage);
 
-        StageBuilder.getIndexingStage().show();
+        if (MediaDB.databaseExists()) {
+            MediaDB db = new MediaDB();
+
+            StageBuilder.getAudioMediaStage(db.getAudioFiles()).show();
+
+            db.closeDB();
+        } else {
+            StageBuilder.getIndexingStage().show();
+        }
     }
 
     /**

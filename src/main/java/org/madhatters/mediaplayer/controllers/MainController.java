@@ -267,13 +267,17 @@ public class MainController {
                 changeSong(playlist.getCurrentSong());
             });
 
+            playlist.setCurrentSong(audio);
+
             play();
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
             return;
         }
 
-        songInfoLabel.setText(String.format("%s - %s", audio.getArtist(), audio.getTitle()));
+        String songInfo = String.format("%s - %s", audio.getArtist(), audio.getTitle());
+        songInfoLabel.setText(songInfo);
+        songInfoLabel.setTooltip(new Tooltip(songInfo));
     }
 
     public void setFiles(Collection<AudioFile> audioFiles) {

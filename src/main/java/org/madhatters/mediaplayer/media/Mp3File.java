@@ -15,6 +15,9 @@ import java.io.File;
 //SONG NAME IS THE FILENAME MINUS THE EXTENSION.
 
 public class Mp3File extends AudioFile {
+    public Mp3File(String filePath) {
+        this.filePath = filePath;
+    }
 
     public Mp3File(File f)
     {

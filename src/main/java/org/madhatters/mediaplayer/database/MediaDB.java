@@ -1,6 +1,7 @@
 package org.madhatters.mediaplayer.database;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,16 +13,10 @@ import org.madhatters.mediaplayer.media.AudioFile;
 
 public class MediaDB {
     private Connection con;
-    private String dbName;
-    
-    public MediaDB() {
-        this("MediaPlayer");
-    }
+    private final static String dbName = "MediaPlayer";
 
-    public MediaDB(String name) {
-        this.dbName = name;
+    public MediaDB() {
         this.con = null;
-        
         setupDatabase();
     }
 
@@ -29,12 +24,9 @@ public class MediaDB {
         if (files.isEmpty()) {
             throw new IllegalArgumentException("Cannot add zero files");
         } else {
-            Iterator<AudioFile> itr = files.iterator();
 
-            while (itr.hasNext()) {
-                AudioFile curFile = itr.next();
-
-                String insert = "INSERT INTO audio VALUES (?, ?, ?, ?, ?)";
+            for (AudioFile curFile : files) {
+                String insert = "INSERT INTO audio VALUES (?, ?, ?, ?, ?, ?)";
 
                 try {
                     PreparedStatement stmt = con.prepareStatement(insert);
@@ -45,6 +37,7 @@ public class MediaDB {
                     stmt.setString(3, curFile.getSongTitle());
                     stmt.setString(4, curFile.getAlbum());
                     stmt.setString(5, FilenameUtils.getExtension(curFile.getFilePath()));
+                    stmt.setDouble(6, curFile.getDuration());
 
                     stmt.executeUpdate();
                     stmt.close();
@@ -56,7 +49,7 @@ public class MediaDB {
     }
 
     public Collection<AudioFile> getAudioFiles() {
-        String sql = "SELECT filepath FROM audio";
+        String sql = "SELECT * FROM audio";
         ArrayList<AudioFile> files = new ArrayList<>();
 
         try {
@@ -67,7 +60,13 @@ public class MediaDB {
 
             while (result.next()) {
                 String filePath = result.getString("filepath");
+
                 AudioFile audioFile = audioFactory.produceAudioFile(new File(filePath), FilenameUtils.getExtension(filePath));
+                audioFile.setAlbum(result.getString("album"));
+                audioFile.setSongTitle(result.getString("title"));
+                audioFile.setArtistName(result.getString("artist"));
+                audioFile.setDuration(result.getDouble("duration"));
+
                 files.add(audioFile);
             }
 
@@ -91,28 +90,38 @@ public class MediaDB {
         }
     }
 
-    public String getDBName() {
-        return this.dbName;
+    public static String getDbPath() {
+        return FilenameUtils.concat(FilenameUtils.concat(defaultDirectory(), "MHMP"), dbName + ".db");
+    }
+
+    public static boolean databaseExists() {
+        return new File(getDbPath()).exists();
     }
 
     private void setupDatabase() {
+        File dbFile = new File(getDbPath());
+        File parentDirectory = dbFile.getParentFile();
+
+        if (!parentDirectory.exists()) {
+            parentDirectory.mkdirs();
+        }
+
         try {
-            con = DriverManager.getConnection("jdbc:sqlite:" + this.dbName + ".db");
-            createSongTable("audio");
-            
+            boolean databaseNeedsSetup = !databaseExists();
+
+            con = DriverManager.getConnection("jdbc:sqlite:" + getDbPath());
+
+            if (databaseNeedsSetup) {
+                createSongTable("audio");
+            }
         } catch (SQLException e) {
             System.err.println(e);
         }
     }
 
-    private void createDBTable(String name, String create) {
+    private void createDBTable(String create) {
         try {
-            String drop = "DROP TABLE IF EXISTS " + name;
-            PreparedStatement stmt = con.prepareStatement(drop);
-            stmt.setQueryTimeout(30);
-            stmt.execute();
-
-            stmt = con.prepareStatement(create);
+            PreparedStatement stmt = con.prepareStatement(create);
             stmt.execute();
             stmt.close();
 
@@ -127,8 +136,28 @@ public class MediaDB {
                             "artist String, " +
                             "title String, " +
                             "album String, " +
-                            "type String" +
+                            "type String, " +
+                            "duration real" +
                         ")";
-        createDBTable(name, sql);
+
+        createDBTable(sql);
+    }
+
+    /**
+     * http://stackoverflow.com/questions/6561172/find-directory-for-application-data-on-linux-and-macintosh
+     * @return
+     */
+    private static String defaultDirectory()
+    {
+        String OS = System.getProperty("os.name").toUpperCase();
+
+        if (OS.contains("WIN"))
+            return System.getenv("APPDATA");
+        else if (OS.contains("MAC"))
+            return System.getProperty("user.home") + "/Library/Application "
+                    + "Support";
+        else if (OS.contains("NUX"))
+            return System.getProperty("user.home") + "/.config";
+        return System.getProperty("user.dir");
     }
 }

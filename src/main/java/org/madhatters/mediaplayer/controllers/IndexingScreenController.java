@@ -10,6 +10,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.madhatters.mediaplayer.builder.StageBuilder;
 import org.madhatters.mediaplayer.concurrent.ExecutorServiceSingleton;
+import org.madhatters.mediaplayer.database.MediaDB;
 import org.madhatters.mediaplayer.media.AudioFile;
 import org.madhatters.mediaplayer.media.FileFinder;
 import org.madhatters.mediaplayer.models.Audio;
@@ -119,6 +120,14 @@ public class IndexingScreenController {
      * @param files
      */
     private void scanFinished(Collection<AudioFile> files) {
+        files.forEach(AudioFile::populateFields);
+
+        MediaDB db = new MediaDB();
+
+        db.addAudioFiles(files);
+
+        db.closeDB();
+
         Platform.runLater(() -> {
             Stage stage = null;
 
