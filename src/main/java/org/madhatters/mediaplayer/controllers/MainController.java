@@ -35,6 +35,7 @@ public class MainController {
     public TextField searchField;
     @FXML
     public TableColumn<Audio, String> lengthColumn;
+    public TableColumn<Audio, String> albumColumn;
     @FXML
     private TableView<Audio> mediaTable;
     @FXML private TableColumn<Audio, String> filePathColumn;
@@ -146,6 +147,7 @@ public class MainController {
     private void initializeTableView() {
         filePathColumn.setCellValueFactory(new PropertyValueFactory<>("path"));
         artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
+        albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
 

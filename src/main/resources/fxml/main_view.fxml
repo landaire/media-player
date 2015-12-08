@@ -20,6 +20,7 @@
         <columns>
           <TableColumn fx:id="titleColumn" minWidth="0.0" prefWidth="227.0" text="Title" />
             <TableColumn fx:id="artistColumn" minWidth="5.0" prefWidth="167.0" text="Artist" />
+           <TableColumn fx:id="albumColumn" minWidth="5.0" prefWidth="167.0" text="Album" />
             <TableColumn fx:id="lengthColumn" minWidth="5.0" prefWidth="190.0" text="Length" />
           <TableColumn fx:id="filePathColumn" prefWidth="268.0" text="Path" />
         </columns>
