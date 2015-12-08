@@ -27,7 +27,7 @@ public class MidiFile extends AudioFile {
             throw new IllegalArgumentException("f is not a valid Midi file");
         }
 
-        populateFields(metadata);
+        populateFields(metadata, f);
     }
 
     protected Parser getParser() {

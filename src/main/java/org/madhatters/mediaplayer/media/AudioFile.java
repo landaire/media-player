@@ -22,11 +22,12 @@ public abstract class AudioFile {
     private Media media;
     private Double duration;
 
-    protected void populateFields(Metadata metadata) {
+    protected void populateFields(Metadata metadata, File file) {
+        this.filePath = file.getAbsolutePath();
         this.artistName = metadata.get("xmpDM:artist");
         this.songTitle = metadata.get("title");
         this.album = metadata.get("xmpDM:album");
-        this.duration = Double.parseDouble(metadata.get("xmpDm:duration"));
+        this.duration = Double.parseDouble(metadata.get("xmpDM:duration"));
     }
 
     public Double getDuration() {

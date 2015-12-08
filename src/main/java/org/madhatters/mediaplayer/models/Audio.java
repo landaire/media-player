@@ -1,6 +1,7 @@
 package org.madhatters.mediaplayer.models;
 
 import javafx.beans.property.SimpleStringProperty;
+import org.madhatters.mediaplayer.media.AudioFile;
 
 /**
  * Created by Lander Brandt on 11/15/15.
@@ -11,6 +12,8 @@ public class Audio {
     private final SimpleStringProperty title;
     private final SimpleStringProperty album;
 
+    private Double duration;
+
     public Audio(String path, String artist, String title, String album) {
         artist = defaultValue(artist, "Artist");
         title = defaultValue(title, "Title");
@@ -20,6 +23,13 @@ public class Audio {
         this.artist = new SimpleStringProperty(artist);
         this.title = new SimpleStringProperty(title);
         this.album = new SimpleStringProperty(album);
+    }
+
+    public static Audio fromAudioFile(AudioFile file) {
+        Audio that = new Audio(file.getFilePath(), file.getArtistName(), file.getSongTitle(), file.getAlbum());
+        that.duration = file.getDuration();
+
+        return that;
     }
 
     public String getPath() {
@@ -52,6 +62,10 @@ public class Audio {
 
     public void setAlbum(String album) {
         this.album.set(album);
+    }
+
+    public Double getDuration() {
+        return duration;
     }
 
     private String defaultValue(String value, String name) {

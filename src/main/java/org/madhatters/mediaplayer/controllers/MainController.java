@@ -17,7 +17,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -40,14 +39,9 @@ public class MainController {
     ObservableList<Audio> masterFiles = FXCollections.observableArrayList();
 
     public void initialize() {
-        mediaTable.setOnMousePressed(e -> {
-            if (e.isPrimaryButtonDown() && e.getClickCount() == 2) {
-                Audio selectedAudioFile = mediaTable.getSelectionModel().getSelectedItem();
-
-                changeSong(selectedAudioFile);
-            }
-        });
-
+        /**
+         * This listener is here to change the playlist when the files are updated
+         */
         masterFiles.addListener(new ListChangeListener<Audio>() {
             @Override
             public void onChanged(Change<? extends Audio> c) {
@@ -55,6 +49,9 @@ public class MainController {
             }
         });
 
+        /**
+         * Background thread which updates the UI as songs play
+         */
         ExecutorServiceSingleton.instance().execute(() -> {
             Double lastTime = -1.0;
             while (!Thread.interrupted()) {
@@ -75,9 +72,9 @@ public class MainController {
                         return;
                     }
 
-                    String currentTimeString = String.format("%01.0f:%02.0f", currentTime / 60, currentTime % 60);
-
-                    songDurationLabel.setText(String.format("%s - %s", currentTimeString, "NULL"));
+                    songDurationLabel.setText(String.format("%s - %s", formatMilliseconds(currentTime * 1000), formatMilliseconds(playlist.getCurrentSong().getDuration())));
+                    seekSlider.setMax(playlist.getCurrentSong().getDuration());
+                    seekSlider.setValue(currentTime * 1000);
                 });
             }
         });
@@ -85,10 +82,25 @@ public class MainController {
         initializeTableView();
     }
 
+    /**
+     * Handles the initialization of the table view. Sets the cell value factories, where it sources data from,
+     * filter listener, etc.
+     */
     private void initializeTableView() {
         filePathColumn.setCellValueFactory(new PropertyValueFactory<>("path"));
         artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+
+        /**
+         * Double-click handler for the table view
+         */
+        mediaTable.setOnMousePressed(e -> {
+            if (e.isPrimaryButtonDown() && e.getClickCount() == 2) {
+                Audio selectedAudioFile = mediaTable.getSelectionModel().getSelectedItem();
+
+                changeSong(selectedAudioFile);
+            }
+        });
 
         // The predicate here displays all files
         FilteredList<Audio> filteredFiles = new FilteredList<>(masterFiles, mp3 -> true);
@@ -154,8 +166,18 @@ public class MainController {
     public void setFiles(Collection<AudioFile> audioFiles) {
         masterFiles.setAll(audioFiles
                 .stream()
-                .map(f -> new Audio(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                .map(Audio::fromAudioFile)
                 .collect(Collectors.toList())
         );
+    }
+
+    /**
+     * Formats milliseconds in m:ss format
+     * @param milliseconds
+     * @return
+     */
+    private String formatMilliseconds(Double milliseconds) {
+        milliseconds /= 1000;
+        return String.format("%01.0f:%02.0f", milliseconds / 60, milliseconds % 60);
     }
 }

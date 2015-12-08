@@ -24,7 +24,7 @@ public class Mp3File extends AudioFile {
             throw new IllegalArgumentException("f is not a valid MP3 file");
         }
 
-        populateFields(metadata);
+        populateFields(metadata, f);
     }
 
     protected Parser getParser() {
