@@ -1,6 +1,8 @@
 package org.madhatters.mediaplayer.controllers;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -9,12 +11,15 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.util.Duration;
 import org.madhatters.mediaplayer.concurrent.ExecutorServiceSingleton;
 import org.madhatters.mediaplayer.media.AudioFile;
 import org.madhatters.mediaplayer.media.Playlist;
 import org.madhatters.mediaplayer.models.Audio;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import org.madhatters.mediaplayer.util.TimeUtilities;
 
 import java.io.File;
 import java.util.Collection;
@@ -28,7 +33,10 @@ public class MainController {
     public Slider seekSlider;
     public Label songDurationLabel;
     public TextField searchField;
-    @FXML private TableView<Audio> mediaTable;
+    @FXML
+    public TableColumn<Audio, String> lengthColumn;
+    @FXML
+    private TableView<Audio> mediaTable;
     @FXML private TableColumn<Audio, String> filePathColumn;
     @FXML private TableColumn<Audio, String> artistColumn;
     @FXML private TableColumn<Audio, String> titleColumn;
@@ -38,7 +46,16 @@ public class MainController {
 
     ObservableList<Audio> masterFiles = FXCollections.observableArrayList();
 
+    static final String PAUSE_TEXT = "Pause";
+    static final String PLAY_TEXT = "Play";
+
+    static final Object pauseLock = new Object();
+    boolean paused = false;
+
     public void initialize() {
+        songInfoLabel.setText("");
+        songDurationLabel.setText("");
+
         /**
          * This listener is here to change the playlist when the files are updated
          */
@@ -72,14 +89,54 @@ public class MainController {
                         return;
                     }
 
-                    songDurationLabel.setText(String.format("%s - %s", formatMilliseconds(currentTime * 1000), formatMilliseconds(playlist.getCurrentSong().getDuration())));
-                    seekSlider.setMax(playlist.getCurrentSong().getDuration());
-                    seekSlider.setValue(currentTime * 1000);
+                    synchronized (pauseLock) {
+                        if (!paused) {
+                            seekSlider.setMax(playlist.getCurrentSong().getDuration());
+                            seekSlider.setValue(currentTime * 1000);
+                        }
+                    }
                 });
             }
         });
 
+        seekSlider.valueChangingProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean wasChanging, Boolean changing) {
+                if (changing) {
+                    pause();
+                }
+
+                if (!changing) {
+                    seekCurrentSongFromSlider();
+                }
+            }
+        });
+
+        seekSlider.setOnMousePressed(c -> {
+                pause();
+        });
+
+        seekSlider.setOnMouseReleased(c -> {
+            seekCurrentSongFromSlider();
+
+            play();
+        });
+
+        seekSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if (currentMediaPlayer == null) {
+                    return;
+                }
+
+                songDurationLabel.setText(String.format("%s - %s", TimeUtilities.formatMilliseconds(newValue.doubleValue()),
+                        TimeUtilities.formatMilliseconds(playlist.getCurrentSong().getDuration())));
+            }
+        });
+
         initializeTableView();
+
+        initializeButtonHandlers();
     }
 
     /**
@@ -90,6 +147,7 @@ public class MainController {
         filePathColumn.setCellValueFactory(new PropertyValueFactory<>("path"));
         artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
 
         /**
          * Double-click handler for the table view
@@ -136,6 +194,62 @@ public class MainController {
         mediaTable.setItems(sortedData);
     }
 
+    private void initializeButtonHandlers() {
+        previousButton.setOnMouseClicked(event -> {
+            if (event.getButton() != MouseButton.PRIMARY) {
+                return;
+            }
+
+            if (event.getClickCount() == 2) {
+                playlist.previousTrack();
+            }
+
+            changeSong(playlist.getCurrentSong());
+        });
+
+        nextButton.setOnAction(event -> {
+            playlist.skipTrack();
+
+            changeSong(playlist.getCurrentSong());
+        });
+
+        pauseButton.setOnAction(event -> {
+            if (paused) {
+                play();
+            } else {
+                pause();
+            }
+        });
+    }
+
+    private void pause() {
+        if (currentMediaPlayer == null) {
+            return;
+        }
+
+        synchronized (pauseLock) {
+            paused = true;
+
+            pauseButton.setText(PLAY_TEXT);
+
+            currentMediaPlayer.pause();
+        }
+    }
+
+    private void play() {
+        if (currentMediaPlayer == null) {
+            return;
+        }
+
+        synchronized (pauseLock) {
+            paused = false;
+
+            pauseButton.setText(PAUSE_TEXT);
+
+            currentMediaPlayer.play();
+        }
+    }
+
     /**
      * Changes the currently playing song and updates all UI components
      * @param audio
@@ -152,9 +266,8 @@ public class MainController {
                 playlist.skipTrack();
                 changeSong(playlist.getCurrentSong());
             });
-            currentMediaPlayer.setOnPlaying(() -> {
-            });
-            currentMediaPlayer.play();
+
+            play();
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
             return;
@@ -171,13 +284,10 @@ public class MainController {
         );
     }
 
-    /**
-     * Formats milliseconds in m:ss format
-     * @param milliseconds
-     * @return
-     */
-    private String formatMilliseconds(Double milliseconds) {
-        milliseconds /= 1000;
-        return String.format("%01.0f:%02.0f", milliseconds / 60, milliseconds % 60);
+
+    private void seekCurrentSongFromSlider() {
+        if (currentMediaPlayer != null) {
+            currentMediaPlayer.seek(new Duration(seekSlider.getValue()));
+        }
     }
 }
