@@ -36,6 +36,7 @@ public class StageBuilder {
 
         primaryStage.setResizable(true);
         primaryStage.setScene(new Scene(root));
+        primaryStage.centerOnScreen();
 
         return primaryStage;
     }
