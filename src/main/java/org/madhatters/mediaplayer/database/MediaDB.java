@@ -1,13 +1,13 @@
 package org.madhatters.mediaplayer.database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.io.File;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.io.FilenameUtils;
+import org.madhatters.mediaplayer.media.AudioFactory;
 import org.madhatters.mediaplayer.media.AudioFile;
 
 public class MediaDB {
@@ -23,6 +23,76 @@ public class MediaDB {
         this.con = null;
         
         setupDatabase();
+    }
+
+    public void addAudioFiles(Collection<AudioFile> files) {
+        if (files.isEmpty()) {
+            throw new IllegalArgumentException("Cannot add zero files");
+        } else {
+            Iterator<AudioFile> itr = files.iterator();
+
+            while (itr.hasNext()) {
+                AudioFile curFile = itr.next();
+
+                String insert = "INSERT INTO audio VALUES (?, ?, ?, ?, ?)";
+
+                try {
+                    PreparedStatement stmt = con.prepareStatement(insert);
+                    stmt.setQueryTimeout(30);
+
+                    stmt.setString(1, curFile.getFilePath());
+                    stmt.setString(2, curFile.getArtistName());
+                    stmt.setString(3, curFile.getSongTitle());
+                    stmt.setString(4, curFile.getAlbum());
+                    stmt.setString(5, FilenameUtils.getExtension(curFile.getFilePath()));
+
+                    stmt.executeUpdate();
+                    stmt.close();
+                } catch (SQLException e) {
+                    System.err.println(e);
+                }
+            }
+        }
+    }
+
+    public Collection<AudioFile> getAudioFiles() {
+        String sql = "SELECT filepath FROM audio";
+        ArrayList<AudioFile> files = new ArrayList<>();
+
+        try {
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet result = stmt.executeQuery();
+
+            AudioFactory audioFactory = new AudioFactory();
+
+            while (result.next()) {
+                String filePath = result.getString("filepath");
+                AudioFile audioFile = audioFactory.produceAudioFile(new File(filePath), FilenameUtils.getExtension(filePath));
+                files.add(audioFile);
+            }
+
+            result.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
+
+        return files;
+    }
+
+
+    public void closeDB() {
+        try {
+            if (con != null) {
+                con.close();
+            }
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
+    }
+
+    public String getDBName() {
+        return this.dbName;
     }
 
     private void setupDatabase() {
@@ -61,56 +131,4 @@ public class MediaDB {
                         ")";
         createDBTable(name, sql);
     }
-
-    public void addAudioFiles(Collection<AudioFile> files) {
-        if (files.isEmpty()) {
-            throw new IllegalArgumentException("Cannot add zero files");
-        } else {
-            Iterator<AudioFile> itr = files.iterator();
-
-            while (itr.hasNext()) {
-                AudioFile curFile = itr.next();
-
-                String insert = "INSERT INTO audio VALUES (?, ?, ?, ?, ?)";/* +
-                        "\"" + curFile.getFilePath() + "\", " +
-                        "\"" + curFile.getArtistName() + "\", " +
-                        "\"" + curFile.getSongTitle() + "\", " +
-                        "\"" + curFile.getAlbum() + "\", " +
-                        "\"" + fileType + "\"" +
-                        ")";*/
-
-                try {
-                    PreparedStatement stmt = con.prepareStatement(insert);
-                    stmt.setQueryTimeout(30);
-
-                    stmt.setString(1, curFile.getFilePath());
-                    stmt.setString(2, curFile.getArtistName());
-                    stmt.setString(3, curFile.getSongTitle());
-                    stmt.setString(4, curFile.getAlbum());
-                    stmt.setString(5, FilenameUtils.getExtension(curFile.getFilePath()));
-
-                    System.out.println(stmt);
-
-                    stmt.executeUpdate();
-                    stmt.close();
-                } catch (SQLException e) {
-                    System.err.println(e);
-                }
-            }
-        }
-    }
-
-    public void closeDB() {
-        try {
-            if (con != null) {
-                con.close();
-            }
-        } catch (SQLException e) {
-            System.err.println(e);
-        }
-    }
-
-    /*public String getDBName() {
-        return this.dbName;
-    }*/
 }
