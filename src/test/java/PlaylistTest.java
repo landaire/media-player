@@ -1,19 +1,18 @@
 import org.junit.Test;
-import org.madhatters.mediaplayer.models.Mp3;
+import org.madhatters.mediaplayer.models.Audio;
 
 // These imports are for creating ObservableList
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.madhatters.mediaplayer.media.FileFinder;
 import org.madhatters.mediaplayer.media.Playlist;
-import org.madhatters.mediaplayer.models.Mp3;
 
 import java.util.stream.Collectors;
 
 /**
  * Created by RyanMalmoe on 11/26/15.
  *
- * 7 of 8 unit tests complete
+ * 8 of 8 unit tests complete
  *
  * Next job:
  *  -Test get current song (Done)
@@ -32,10 +31,10 @@ public class PlaylistTest {
 
     @Test
             (expected=IndexOutOfBoundsException.class) public void testGetSongAtIndex() throws Exception {
-        ObservableList<Mp3> files;
+        ObservableList<Audio> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
                 .stream()
-                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                .map(f -> new Audio(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
                 .collect(Collectors.toList())
         );
 
@@ -48,16 +47,16 @@ public class PlaylistTest {
 
     @Test
             (expected=IllegalArgumentException.class) public void testPlaylistInitialization() throws Exception {
-        ObservableList<Mp3> files = null;
+        ObservableList<Audio> files = null;
         Playlist playlist = new Playlist(files);
     }
 
     @Test
     public void testGetCurrentSong() throws Exception {
-        ObservableList<Mp3> files;
+        ObservableList<Audio> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
                 .stream()
-                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                .map(f -> new Audio(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
                 .collect(Collectors.toList())
         );
 
@@ -67,10 +66,10 @@ public class PlaylistTest {
 
     @Test
             (expected=IllegalArgumentException.class) public void testSkipTrack() throws Exception {
-        ObservableList<Mp3> files;
+        ObservableList<Audio> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
                 .stream()
-                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                .map(f -> new Audio(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
                 .collect(Collectors.toList())
         );
 
@@ -91,10 +90,10 @@ public class PlaylistTest {
 
     @Test
             (expected=IllegalArgumentException.class) public void testPreviousTrack() throws Exception {
-        ObservableList<Mp3> files;
+        ObservableList<Audio> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
                 .stream()
-                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                .map(f -> new Audio(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
                 .collect(Collectors.toList())
         );
 
@@ -115,10 +114,10 @@ public class PlaylistTest {
 
     @Test
     public void testRemoveSong() throws Exception {
-        ObservableList<Mp3> files;
+        ObservableList<Audio> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
                 .stream()
-                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                .map(f -> new Audio(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
                 .collect(Collectors.toList())
         );
 
@@ -130,10 +129,10 @@ public class PlaylistTest {
 
     @Test
             (expected=IllegalArgumentException.class) public void testRemoveSongByIndex() throws Exception {
-        ObservableList<Mp3> files;
+        ObservableList<Audio> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
                 .stream()
-                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                .map(f -> new Audio(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
                 .collect(Collectors.toList())
         );
 

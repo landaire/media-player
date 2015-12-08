@@ -5,13 +5,13 @@ import javafx.beans.property.SimpleStringProperty;
 /**
  * Created by Lander Brandt on 11/15/15.
  */
-public class Mp3 {
+public class Audio {
     private final SimpleStringProperty path;
     private final SimpleStringProperty artist;
     private final SimpleStringProperty title;
     private final SimpleStringProperty album;
 
-    public Mp3(String path, String artist, String title, String album) {
+    public Audio(String path, String artist, String title, String album) {
         this.path = new SimpleStringProperty(path);
         this.artist = new SimpleStringProperty(artist);
         this.title = new SimpleStringProperty(title);

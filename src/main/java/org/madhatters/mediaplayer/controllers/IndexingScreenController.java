@@ -5,20 +5,18 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.madhatters.mediaplayer.builder.StageBuilder;
 import org.madhatters.mediaplayer.concurrent.ExecutorServiceSingleton;
+import org.madhatters.mediaplayer.media.AudioFile;
 import org.madhatters.mediaplayer.media.FileFinder;
-import org.madhatters.mediaplayer.media.Mp3File;
-import org.madhatters.mediaplayer.models.Mp3;
+import org.madhatters.mediaplayer.models.Audio;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 /**
  * Created by Lander Brandt on 11/21/15.
@@ -92,7 +90,7 @@ public class IndexingScreenController {
                 fileStatusProgressBar.setProgress(-1.0f);
 
                 ExecutorServiceSingleton.instance().execute(() -> {
-                    Collection<Mp3File> files =  FileFinder.findIn(scanDir(), f -> {
+                    Collection<AudioFile> files =  FileFinder.findIn(scanDir(), f -> {
                         Platform.runLater( new Runnable() {
                             @Override public void run() {
                                 currentDirectoryLabel.setText(f.getAbsolutePath());
@@ -120,7 +118,7 @@ public class IndexingScreenController {
      * Called when scanning files finishes
      * @param files
      */
-    private void scanFinished(Collection<Mp3File> files) {
+    private void scanFinished(Collection<AudioFile> files) {
         Platform.runLater(() -> {
             Stage stage = null;
 

@@ -6,19 +6,19 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.madhatters.mediaplayer.media.Mp3File;
-import org.madhatters.mediaplayer.models.Mp3;
+import org.madhatters.mediaplayer.media.AudioFile;
+import org.madhatters.mediaplayer.models.Audio;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class MainController {
-    @FXML private TableView<Mp3> mediaTable;
-    @FXML private TableColumn<Mp3, String> filePathColumn;
-    @FXML private TableColumn<Mp3, String> artistColumn;
-    @FXML private TableColumn<Mp3, String> titleColumn;
+    @FXML private TableView<Audio> mediaTable;
+    @FXML private TableColumn<Audio, String> filePathColumn;
+    @FXML private TableColumn<Audio, String> artistColumn;
+    @FXML private TableColumn<Audio, String> titleColumn;
 
-    ObservableList<Mp3> files;
+    ObservableList<Audio> files;
 
     public void initialize() {
         filePathColumn.setCellValueFactory(new PropertyValueFactory<>("path"));
@@ -26,10 +26,10 @@ public class MainController {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
     }
 
-    public void setFiles(Collection<Mp3File> mp3Files) {
-        files = FXCollections.observableArrayList(mp3Files
+    public void setFiles(Collection<AudioFile> audioFiles) {
+        files = FXCollections.observableArrayList(audioFiles
                 .stream()
-                .map(f -> new Mp3(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
+                .map(f -> new Audio(f.getFilePath(), f.getArtistName(), f.getSongTitle(), f.getAlbum()))
                 .collect(Collectors.toList())
         );
 

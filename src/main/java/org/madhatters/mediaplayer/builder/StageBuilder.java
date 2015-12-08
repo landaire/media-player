@@ -5,7 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.madhatters.mediaplayer.controllers.MainController;
-import org.madhatters.mediaplayer.media.Mp3File;
+import org.madhatters.mediaplayer.media.AudioFile;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -28,7 +28,7 @@ public class StageBuilder {
         return primaryStage;
     }
 
-    public static Stage getAudioMediaStage(Collection<Mp3File> files) throws IOException {
+    public static Stage getAudioMediaStage(Collection<AudioFile> files) throws IOException {
         FXMLLoader loader = getLoaderForResource(audioMediaResource);
         Parent root  = loader.load();
 
