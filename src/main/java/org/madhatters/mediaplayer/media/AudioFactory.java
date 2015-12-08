@@ -22,15 +22,16 @@ public class AudioFactory {
 
     public AudioFile produceAudioFile(File f, String fileExtension) {
 
-            return determineParser(f, fileExtension);
+        return determineParser(f, fileExtension);
     }
 
     public static AudioFile determineParser(File file, String fileExtension) {
-        if(fileExtension.equalsIgnoreCase(".mp3")) {
+        if (fileExtension.equalsIgnoreCase("mp3")) {
             return new Mp3File(file);
-        } else if(fileExtension.equalsIgnoreCase(".mid")) {
+        } else if (fileExtension.equalsIgnoreCase("mid")) {
             return new MidiFile(file);
         }
+
         return null;
     }
 

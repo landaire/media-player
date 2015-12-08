@@ -12,6 +12,10 @@ public class Audio {
     private final SimpleStringProperty album;
 
     public Audio(String path, String artist, String title, String album) {
+        artist = defaultValue(artist, "Artist");
+        title = defaultValue(title, "Title");
+        album = defaultValue(title, "Album");
+
         this.path = new SimpleStringProperty(path);
         this.artist = new SimpleStringProperty(artist);
         this.title = new SimpleStringProperty(title);
@@ -48,5 +52,13 @@ public class Audio {
 
     public void setAlbum(String album) {
         this.album.set(album);
+    }
+
+    private String defaultValue(String value, String name) {
+        if (value == null || value.isEmpty()) {
+            return String.format("Unknown %s", name);
+        }
+
+        return value;
     }
 }

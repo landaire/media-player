@@ -1,13 +1,17 @@
 package org.madhatters.mediaplayer.controllers;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.madhatters.mediaplayer.concurrent.ExecutorServiceSingleton;
 import org.madhatters.mediaplayer.media.AudioFile;
+import org.madhatters.mediaplayer.media.Playlist;
 import org.madhatters.mediaplayer.models.Audio;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -31,6 +35,7 @@ public class MainController {
     @FXML private TableColumn<Audio, String> titleColumn;
 
     MediaPlayer currentMediaPlayer;
+    Playlist playlist;
 
     ObservableList<Audio> masterFiles = FXCollections.observableArrayList();
 
@@ -39,17 +44,41 @@ public class MainController {
             if (e.isPrimaryButtonDown() && e.getClickCount() == 2) {
                 Audio selectedAudioFile = mediaTable.getSelectionModel().getSelectedItem();
 
-                if (currentMediaPlayer != null) {
-                    currentMediaPlayer.stop();
+                changeSong(selectedAudioFile);
+            }
+        });
+
+        masterFiles.addListener(new ListChangeListener<Audio>() {
+            @Override
+            public void onChanged(Change<? extends Audio> c) {
+                playlist = new Playlist(masterFiles);
+            }
+        });
+
+        ExecutorServiceSingleton.instance().execute(() -> {
+            Double lastTime = -1.0;
+            while (!Thread.interrupted()) {
+                if (currentMediaPlayer == null) {
+                    continue;
                 }
 
-                try {
-                    Media newMedia = new Media(new File(selectedAudioFile.getPath()).toURI().toString());
-                    currentMediaPlayer = new MediaPlayer(newMedia);
-                    currentMediaPlayer.play();
-                } catch (Exception ex) {
-                    System.err.println(ex.getMessage());
+                Double currentTime = currentMediaPlayer.getCurrentTime().toSeconds();
+
+                if (lastTime.equals(currentTime)) {
+                    continue;
                 }
+
+                lastTime = currentTime;
+
+                Platform.runLater(() -> {
+                    if (currentMediaPlayer == null) {
+                        return;
+                    }
+
+                    String currentTimeString = String.format("%01.0f:%02.0f", currentTime / 60, currentTime % 60);
+
+                    songDurationLabel.setText(String.format("%s - %s", currentTimeString, "NULL"));
+                });
             }
         });
 
@@ -93,6 +122,33 @@ public class MainController {
         sortedData.comparatorProperty().bind(mediaTable.comparatorProperty());
 
         mediaTable.setItems(sortedData);
+    }
+
+    /**
+     * Changes the currently playing song and updates all UI components
+     * @param audio
+     */
+    private synchronized void changeSong(Audio audio) {
+        if (currentMediaPlayer != null) {
+            currentMediaPlayer.stop();
+        }
+
+        try {
+            Media newMedia = new Media(new File(audio.getPath()).toURI().toString());
+            currentMediaPlayer = new MediaPlayer(newMedia);
+            currentMediaPlayer.setOnEndOfMedia(() -> {
+                playlist.skipTrack();
+                changeSong(playlist.getCurrentSong());
+            });
+            currentMediaPlayer.setOnPlaying(() -> {
+            });
+            currentMediaPlayer.play();
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+            return;
+        }
+
+        songInfoLabel.setText(String.format("%s - %s", audio.getArtist(), audio.getTitle()));
     }
 
     public void setFiles(Collection<AudioFile> audioFiles) {
