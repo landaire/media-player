@@ -3,6 +3,8 @@ package org.madhatters.mediaplayer.media;
 import javafx.collections.ObservableList;
 import org.madhatters.mediaplayer.models.Audio;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -117,5 +119,12 @@ public class Playlist {
     public void setCurrentSong(Audio Audio) {
         this.currentSong = Audio;
         this.currentSongIndex = files.indexOf(Audio);
+    }
+
+    public Playlist shuffle() {
+        List<Audio> shuffledSongs = new ArrayList<>(files);
+        Collections.shuffle(shuffledSongs);
+
+        return new Playlist(shuffledSongs);
     }
 }
