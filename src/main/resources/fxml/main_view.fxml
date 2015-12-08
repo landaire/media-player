@@ -30,32 +30,41 @@
       </TableView>
       <HBox>
          <children>
-            <Button fx:id="previousButton" mnemonicParsing="false" text="Previous">
+            <Button fx:id="previousButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Previous">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="pauseButton" mnemonicParsing="false" text="Pause">
+            <Button fx:id="pauseButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="27.0" prefWidth="77.0" text="Pause">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="nextButton" mnemonicParsing="false" text="Next">
+            <Button fx:id="nextButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="27.0" prefWidth="69.0" text="Next">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Label fx:id="songInfoLabel" prefHeight="17.0" prefWidth="183.0" text="ARTIST-TITLE" />
-            <Slider fx:id="seekSlider" />
-            <Label fx:id="songDurationLabel" prefHeight="17.0" prefWidth="87.0" text="0:00 - 3:00" />
-            <Pane prefHeight="200.0" prefWidth="200.0" />
+            <Label fx:id="songInfoLabel" prefHeight="17.0" prefWidth="183.0" text="ARTIST-TITLE">
+               <HBox.margin>
+                  <Insets top="5.0" />
+               </HBox.margin></Label>
+            <Slider fx:id="seekSlider" prefHeight="16.0" prefWidth="174.0">
+               <HBox.margin>
+                  <Insets top="5.0" />
+               </HBox.margin></Slider>
+            <Label fx:id="songDurationLabel" prefHeight="17.0" prefWidth="106.0" text="0:00 - 3:00">
+               <HBox.margin>
+                  <Insets top="5.0" />
+               </HBox.margin></Label>
+            <Pane prefHeight="27.0" prefWidth="11.0" />
             <TextField fx:id="searchField" promptText="Filter">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets></TextField>
          </children>
          <GridPane.margin>
-            <Insets top="30.0" />
+            <Insets left="30.0" right="30.0" top="30.0" />
          </GridPane.margin>
       </HBox>
    </children>
