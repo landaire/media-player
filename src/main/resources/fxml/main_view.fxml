@@ -45,10 +45,14 @@
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Label fx:id="songInfoLabel" prefWidth="300.0" text="ARTIST-TITLE" />
+            <Label fx:id="songInfoLabel" prefHeight="17.0" prefWidth="183.0" text="ARTIST-TITLE" />
             <Slider fx:id="seekSlider" />
-            <Label fx:id="songDurationLabel" prefWidth="50.0" text="PLAYED:LENGTH" />
-            <TextField fx:id="searchField" />
+            <Label fx:id="songDurationLabel" prefHeight="17.0" prefWidth="87.0" text="0:00 - 3:00" />
+            <Pane prefHeight="200.0" prefWidth="200.0" />
+            <TextField fx:id="searchField" promptText="Filter">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets></TextField>
          </children>
          <GridPane.margin>
             <Insets top="30.0" />
