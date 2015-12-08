@@ -16,7 +16,7 @@ public class MediaDBTest {
 
         System.out.println("START");
         Collection<AudioFile> songs;
-        songs = allFiles.findIn("C:/Users/Joey/Music/AllMusic/Linkin Park");
+        songs = allFiles.findIn("C:/Users/Joey/Music");
         System.out.println("DONE");
 
         mediaPlayer.addAudioFiles(songs);
