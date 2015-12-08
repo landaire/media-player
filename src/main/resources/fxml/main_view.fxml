@@ -1,24 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.media.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.GridPane?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.madhatters.mediaplayer.controllers.MainController">
+<GridPane alignment="center" hgap="10" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="915.0" vgap="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.madhatters.mediaplayer.controllers.MainController">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
       <RowConstraints />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
    </rowConstraints>
    <children>
-      <TableView fx:id="mediaTable" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+      <TableView fx:id="mediaTable" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="filePathColumn" prefWidth="75.0" text="Path" />
-          <TableColumn fx:id="titleColumn" prefWidth="75.0" text="Title" />
-            <TableColumn fx:id="artistColumn" prefWidth="75.0" text="Artist" />
+          <TableColumn fx:id="filePathColumn" prefWidth="115.0" text="Path" />
+          <TableColumn fx:id="titleColumn" minWidth="0.0" prefWidth="421.0" text="Title" />
+            <TableColumn fx:id="artistColumn" minWidth="5.0" prefWidth="152.0" text="Artist" />
+            <TableColumn fx:id="lengthColumn" minWidth="5.0" prefWidth="164.0" text="Length" />
         </columns>
+         <GridPane.margin>
+            <Insets top="30.0" />
+         </GridPane.margin>
       </TableView>
+      <HBox>
+         <children>
+            <Button fx:id="previousButton" mnemonicParsing="false" text="Previous">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="pauseButton" mnemonicParsing="false" text="Pause">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="nextButton" mnemonicParsing="false" text="Next">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Button>
+            <Label fx:id="songInfoLabel" prefWidth="300.0" text="ARTIST-TITLE" />
+            <Slider fx:id="seekSlider" />
+            <Label fx:id="songDurationLabel" prefWidth="50.0" text="PLAYED:LENGTH" />
+            <TextField fx:id="searchField" />
+         </children>
+         <GridPane.margin>
+            <Insets top="30.0" />
+         </GridPane.margin>
+      </HBox>
    </children>
 </GridPane>
