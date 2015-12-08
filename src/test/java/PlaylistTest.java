@@ -1,3 +1,4 @@
+import org.junit.Before;
 import org.junit.Test;
 import org.madhatters.mediaplayer.models.Audio;
 
@@ -11,26 +12,23 @@ import java.util.stream.Collectors;
 
 /**
  * Created by RyanMalmoe on 11/26/15.
- *
+ * <p>
  * 8 of 8 unit tests complete
- *
+ * <p>
  * Next job:
- *  -Test get current song (Done)
- *  -Test skip track (Done)
- *  -Test previous track (Done)
- *  -Test remove song (Done)
- *  -Test create playlist with 0 files or null observable list (Done)
- *  -Test skip track with 0 or 1 files in playlist (Done)
- *  -Test previous track with 0 or 1 files in playlist (Done)
- *  -Test getSongAtIndex for all cases
- *
+ * -Test get current song (Done)
+ * -Test skip track (Done)
+ * -Test previous track (Done)
+ * -Test remove song (Done)
+ * -Test create playlist with 0 files or null observable list (Done)
+ * -Test skip track with 0 or 1 files in playlist (Done)
+ * -Test previous track with 0 or 1 files in playlist (Done)
+ * -Test getSongAtIndex for all cases
  */
 public class PlaylistTest {
-
-
-
     @Test
-            (expected=IndexOutOfBoundsException.class) public void testGetSongAtIndex() throws Exception {
+            (expected = IndexOutOfBoundsException.class)
+    public void testGetSongAtIndex() throws Exception {
         ObservableList<Audio> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
                 .stream()
@@ -46,7 +44,8 @@ public class PlaylistTest {
     }
 
     @Test
-            (expected=IllegalArgumentException.class) public void testPlaylistInitialization() throws Exception {
+            (expected = IllegalArgumentException.class)
+    public void testPlaylistInitialization() throws Exception {
         ObservableList<Audio> files = null;
         Playlist playlist = new Playlist(files);
     }
@@ -65,7 +64,8 @@ public class PlaylistTest {
     }
 
     @Test
-            (expected=IllegalArgumentException.class) public void testSkipTrack() throws Exception {
+            (expected = IllegalArgumentException.class)
+    public void testSkipTrack() throws Exception {
         ObservableList<Audio> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
                 .stream()
@@ -89,7 +89,8 @@ public class PlaylistTest {
     }
 
     @Test
-            (expected=IllegalArgumentException.class) public void testPreviousTrack() throws Exception {
+            (expected = IllegalArgumentException.class)
+    public void testPreviousTrack() throws Exception {
         ObservableList<Audio> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
                 .stream()
@@ -128,7 +129,8 @@ public class PlaylistTest {
     }
 
     @Test
-            (expected=IllegalArgumentException.class) public void testRemoveSongByIndex() throws Exception {
+            (expected = IllegalArgumentException.class)
+    public void testRemoveSongByIndex() throws Exception {
         ObservableList<Audio> files;
         files = FXCollections.observableArrayList(FileFinder.findIn("/Users/RyanMalmoe/Documents")
                 .stream()
@@ -149,6 +151,6 @@ public class PlaylistTest {
     }
 
     private <T> void assertEquals(T a, T b) {
-        assert(a.equals(b));
+        assert (a.equals(b));
     }
 }

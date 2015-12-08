@@ -1,21 +1,18 @@
-package org.madhatters.mediaplayer.media;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import org.junit.Before;
 import org.junit.Test;
-import org.madhatters.mediaplayer.models.*;
+import org.madhatters.mediaplayer.media.AudioFactory;
+import org.madhatters.mediaplayer.media.AudioFile;
+import org.madhatters.mediaplayer.media.MidiFile;
+import org.madhatters.mediaplayer.media.Mp3File;
 
 import java.io.File;
-import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by RyanMalmoe on 12/6/15.
  */
 public class AudioFactoryTest {
-
-
     @Test
     public void testProduceAudioFile() throws Exception {
         //Test regular .mp3
