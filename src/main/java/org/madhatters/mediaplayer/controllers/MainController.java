@@ -57,6 +57,8 @@ public class MainController {
         songInfoLabel.setText("");
         songDurationLabel.setText("");
 
+        seekSlider.setDisable(true);
+
         /**
          * This listener is here to change the playlist when the files are updated
          */
@@ -242,6 +244,8 @@ public class MainController {
         if (currentMediaPlayer == null) {
             return;
         }
+
+        seekSlider.setDisable(false);
 
         synchronized (pauseLock) {
             paused = false;
