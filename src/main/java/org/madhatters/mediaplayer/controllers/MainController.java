@@ -198,6 +198,9 @@ public class MainController {
         mediaTable.setItems(sortedData);
     }
 
+    /**
+     * Initializes the click handlers for all JavaFX controls
+     */
     private void initializeButtonHandlers() {
         previousButton.setOnMouseClicked(event -> {
             if (event.getButton() != MouseButton.PRIMARY) {
@@ -226,6 +229,9 @@ public class MainController {
         });
     }
 
+    /**
+     * Pauses the current song and updates the JavaFX controls to reflect the current state
+     */
     private void pause() {
         if (currentMediaPlayer == null) {
             return;
@@ -240,6 +246,9 @@ public class MainController {
         }
     }
 
+    /**
+     * Plays the current song and updates JavaFX controls to reflect the current state
+     */
     private void play() {
         if (currentMediaPlayer == null) {
             return;
