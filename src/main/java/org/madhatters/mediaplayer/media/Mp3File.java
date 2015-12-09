@@ -12,13 +12,22 @@ import java.io.File;
  */
 
 
-//SONG NAME IS THE FILENAME MINUS THE EXTENSION.
 
 public class Mp3File extends AudioFile {
+
+    /**
+     * Sets the filepath for an Mp3File object
+     * @param filePath
+     */
     public Mp3File(String filePath) {
         this.filePath = filePath;
     }
 
+
+    /**
+     * Parses the Mp3File and populates the fields with the parsed metadata
+     * @param f
+     */
     public Mp3File(File f)
     {
         Metadata metadata = parse(f);

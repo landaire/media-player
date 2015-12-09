@@ -25,11 +25,22 @@ import java.util.stream.Collectors;
 public class FileFinder {
     private static String [] fileExtensions = {"mp3", "mid"};
 
+
+    /**
+     * Calls the findIn funciton with given directory
+     * @param directory
+     */
     public static Collection<AudioFile> findIn(String directory) {
         // empty lambda so nothing is done on callback
         return findIn(directory, f -> null);
     }
 
+    /**
+     * Walks through the file tree from "directory" and add mp3 and mid files
+     * to the files ArrayList.
+     * @param directory
+     * @param onVisit
+     */
     public static Collection<AudioFile> findIn(String directory, Function<File, Void> onVisit) {
         ArrayList<AudioFile> files = new ArrayList<>();
          try {

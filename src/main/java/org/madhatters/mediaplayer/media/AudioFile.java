@@ -30,6 +30,11 @@ public abstract class AudioFile {
         populateFields(this.parse(file), file);
     }
 
+    /**
+     * Populates all of the fields for an AudioFile with the correct metadata
+     * @param metadata
+     * @param file
+     */
     protected void populateFields(Metadata metadata, File file) {
         this.filePath = file.getAbsolutePath();
         this.artistName = metadata.get("xmpDM:artist");
@@ -75,6 +80,10 @@ public abstract class AudioFile {
         return this.album;
     }
 
+    /**
+     * Checks if a the given file is valid
+     * @param file
+     */
     public boolean isValid(File file) {
         if (this.metaData != null) {
             return true;
@@ -85,6 +94,11 @@ public abstract class AudioFile {
         return this.metaData != null;
     }
 
+    /**
+     * Parses a file at a given path and extracts the metadata from
+     * the file.
+     * @param file
+     */
     protected Metadata parse(File file) {
         if (this.metaData != null) {
             return metaData;

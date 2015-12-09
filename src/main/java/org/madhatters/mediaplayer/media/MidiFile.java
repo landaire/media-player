@@ -19,10 +19,19 @@ import java.io.File;
 //SONG NAME IS THE FILENAME MINUS THE EXTENSION.
 
 public class MidiFile extends AudioFile {
-    public MidiFile(String filepath) {
-        this.filePath = filepath;
+
+    /**
+     * Sets the filepath for an MidiFile object
+     * @param filePath
+     */
+    public MidiFile(String filePath) {
+        this.filePath = filePath;
     }
 
+    /**
+     * Parses the MidiFile and populates the fields with the parsed metadata
+     * @param f
+     */
     public MidiFile(File f)
     {
         Metadata metadata = parse(f);

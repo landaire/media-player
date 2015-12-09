@@ -40,7 +40,10 @@ public class Playlist {
         return this.currentSong;
     }
 
-
+    /**
+     * Returns the song at a specified index in the playlist
+     * @param songIndex
+     */
     public Audio getSongAtIndex(int songIndex) {
         if (songIndex < 0 || songIndex > files.size() - 1) {
             throw new IndexOutOfBoundsException("Song index out of bounds");
@@ -116,11 +119,18 @@ public class Playlist {
         }
     }
 
+    /**
+     * Sets the current song in the playlist to the given Audio file
+     * @param Audio
+     */
     public void setCurrentSong(Audio Audio) {
         this.currentSong = Audio;
         this.currentSongIndex = files.indexOf(Audio);
     }
 
+    /**
+     * Shuffles all the files in the current playlist
+     */
     public Playlist shuffle() {
         List<Audio> shuffledSongs = new ArrayList<>(files);
         Collections.shuffle(shuffledSongs);

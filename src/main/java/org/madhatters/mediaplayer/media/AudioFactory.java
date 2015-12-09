@@ -20,10 +20,21 @@ import java.io.InputStream;
 
 public class AudioFactory {
 
+    /**
+     * Calls the determineParser (builder) function from a given file and extension.
+     * @param f
+     * @param fileExtension
+     */
     public AudioFile produceAudioFile(File f, String fileExtension) {
         return determineParser(f, fileExtension);
     }
 
+    /**
+     * Determines what media type to build based on the
+     * given file extension given.
+     * @param file
+     * @param fileExtension
+     */
     public static AudioFile determineParser(File file, String fileExtension) {
         if (fileExtension.equalsIgnoreCase("mp3")) {
             return new Mp3File(file.getPath());
